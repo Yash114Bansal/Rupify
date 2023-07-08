@@ -46,11 +46,19 @@ class shopkeeper(BaseModel):
 
 app = FastAPI()
 
+cash_database = "/tmp/cash_database.json"
+pending_database = "/tmp/pending_database.json"
+
+with open("/tmp/cash_database.json","w+") as f:
+    f.write("{}")
+
+with open("/tmp/pending_database.json","w+") as f:
+    f.write("{}")
 
 @app.post("/deposite")
 def depoiste_money(cash: cash):
 
-    with open("cash_database.json", "r") as f:
+    with open(cash_database, "r") as f:
         user_data = json.loads(f.read())
 
     if (not user_data.get(cash.aadhar)):
@@ -63,7 +71,7 @@ def depoiste_money(cash: cash):
 
     user_data[cash.aadhar].append(data)
 
-    with open("cash_database.json", "w") as f:
+    with open(cash_database, "w") as f:
         f.write(json.dumps(user_data))
 
     return HTMLResponse(content="Done", status_code=200)
@@ -71,7 +79,7 @@ def depoiste_money(cash: cash):
 @app.post("/get_money")
 def get_money(money_get: money_get):
 
-    with open("cash_database.json", "r") as f:
+    with open(cash_database, "r") as f:
         user_data = json.loads(f.read())
 
     to_return = {"notes": []}
@@ -87,14 +95,14 @@ def get_money(money_get: money_get):
 
         user_data[money_get.aadhar] = []
 
-    with open("cash_database.json", "w") as f:
+    with open(cash_database, "w") as f:
         f.write(json.dumps(user_data))
 
     return JSONResponse(content=to_return)
 
 @app.post("/transfer")
 def get_money(shopkeeper: shopkeeper):
-    with open("pending_database.json", "r") as f:
+    with open(pending_database, "r") as f:
         total_data = json.loads(f.read())
 
     sender_aadhar, note_number = decrypt_message(
@@ -111,7 +119,7 @@ def get_money(shopkeeper: shopkeeper):
 
     total_data[sender_aadhar].append(shopkeeper.note_code)
 
-    with open("pending_database.json", "w") as f:
+    with open(pending_database, "w") as f:
         f.write(json.dumps(total_data))
 
     new_note_number = f"{shopkeeper.shopkeeper_aadhar}::{note_number}"
@@ -122,7 +130,7 @@ def get_money(shopkeeper: shopkeeper):
 @app.post("/get_pending_note")
 def get_pending_note(aadhar: str):
     
-    with open("pending_database.json", "r") as f:
+    with open(pending_database, "r") as f:
         total_data = json.loads(f.read())
     
     if (not total_data.get(aadhar)):
@@ -131,9 +139,9 @@ def get_pending_note(aadhar: str):
     to_return = total_data[aadhar].copy()
     total_data[aadhar] = []
     
-    with open("pending_database.json", "w") as f:
+    with open(pending_database, "w") as f:
         f.write(json.dumps(total_data))
 
     return to_return
 
-run(app,host = '0.0.0.0',port = 3000)
+run(app,host = '0.0.0.0',port = 8000)
