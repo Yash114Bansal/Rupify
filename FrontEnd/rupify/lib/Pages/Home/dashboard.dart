@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rupify/Pages/Home/Wallet/wallet.dart';
 
 class dashboard extends StatelessWidget {
-  const dashboard({Key? key}) : super(key: key);
+  dashboard({Key? key}) : super(key: key);
+  Map<String, int> Note_Data = {
+    '123123123':2000,
+    '123123321':10,
+    '312321123':500,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +269,10 @@ class dashboard extends StatelessWidget {
             SizedBox(width: 48),
             IconButton(
               onPressed: () {
-                // Handle icon button 3 press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WalletScreen(Note_Data: Note_Data)),
+                );
               },
               icon: Image.asset(
                 'assets/Icons/news.png',
