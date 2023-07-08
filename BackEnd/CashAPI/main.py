@@ -52,3 +52,4 @@ async def putval(note:cash):
     notes[note.number] = note.val
     with open(database,"w") as f:
         f.write(json.dumps(notes))   
+    return HTMLResponse(content="Done",status_code = 200)
