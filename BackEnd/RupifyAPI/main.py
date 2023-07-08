@@ -66,3 +66,27 @@ def depoiste_money(cash: cash):
         f.write(json.dumps(user_data))
 
     return HTMLResponse(content="Done", status_code=200)
+
+@app.post("/get_money")
+def get_money(money_get: money_get):
+
+    with open("cash_database.json", "r") as f:
+        user_data = json.loads(f.read())
+
+    to_return = {"notes": []}
+
+    if (user_data.get(money_get.aadhar)):
+        # to_return["notes"] = user_data[money_get.aadhar]
+        notes_list = user_data[money_get.aadhar]
+
+        for i in notes_list:
+            note_form = f"{money_get.aadhar}::{i['note-number']}"
+            encrypted_note = encrypt_message(key, note_form.encode())
+            to_return['notes'].append(f"{encrypted_note}::{i['purpose']}")
+
+        user_data[money_get.aadhar] = []
+
+    with open("cash_database.json", "w") as f:
+        f.write(json.dumps(user_data))
+
+    return JSONResponse(content=to_return)
