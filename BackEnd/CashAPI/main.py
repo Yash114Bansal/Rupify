@@ -55,4 +55,4 @@ async def putval(note:cash):
         f.write(json.dumps(notes))   
     return HTMLResponse(content="Done",status_code = 200)
 
-run(app,host = '0.0.0.0',port = 3000)
+run(app,host = '0.0.0.0', port = 3000 )
