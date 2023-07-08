@@ -12,9 +12,11 @@ root.geometry("1600x950")
 root.minsize(800, 900)
 root.maxsize(800, 900)
 
-govt_api = "https://casgapi.onrender.com/putval"
+# govt_api = "https://casgapi.onrender.com/putval"
 # govt_api = "http://127.0.0.1:8000/putval" # For Debugging
-rupify_api = "https://rupify-production.up.railway.app/deposite"
+# rupify_api = "https://rupify-production.up.railway.app/deposite"
+govt_api = "https://funny-bull-bathing-suit.cyclic.app/putval"
+rupify_api = "https://worried-slug-garment.cyclic.app/deposite"
 
 def send_request():
     note_number = entry1.get()
@@ -31,7 +33,8 @@ def send_request():
         'number': note_number,
         'val':  amount
     }
-    requests.post(govt_api, headers=headers, json=data)
+    r = requests.post(govt_api, headers=headers, json=data)
+    print(r)
 
     data = {
         "aadhar": aadhar_number,
