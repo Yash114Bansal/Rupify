@@ -117,3 +117,20 @@ def get_money(shopkeeper: shopkeeper):
     encrypted_note = encrypt_message(key, new_note_number.encode())
 
     return {"note": encrypted_note}
+
+@app.post("/get_pending_note")
+def get_pending_note(aadhar: str):
+    
+    with open("pending_database.json", "r") as f:
+        total_data = json.loads(f.read())
+    
+    if (not total_data.get(aadhar)):
+        return []
+
+    to_return = total_data[aadhar].copy()
+    total_data[aadhar] = []
+    
+    with open("pending_database.json", "w") as f:
+        f.write(json.dumps(total_data))
+
+    return to_return
