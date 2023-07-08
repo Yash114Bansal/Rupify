@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rupify/Pages/Home/Send%20Money/send.dart';
 import 'package:rupify/Pages/Home/Wallet/wallet.dart';
 
 class dashboard extends StatelessWidget {
@@ -72,7 +73,10 @@ class dashboard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            // Handle button press
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data)),
+                            );
                           },
                           child: Column(
                             children: [
