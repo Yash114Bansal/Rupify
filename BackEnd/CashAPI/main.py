@@ -44,3 +44,11 @@ async def getval(n:cash_note):
     if(notes.get(note)):
         return HTMLResponse(content=str(notes[note]),status_code=200)
     return HTMLResponse(content="Not Found",status_code = 404 )
+
+@app.post("/putval")
+async def putval(note:cash):
+    with open(database,"r") as f:
+        notes = json.loads(f.read())
+    notes[note.number] = note.val
+    with open(database,"w") as f:
+        f.write(json.dumps(notes))   
