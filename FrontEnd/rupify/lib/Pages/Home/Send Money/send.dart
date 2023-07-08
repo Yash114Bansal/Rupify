@@ -83,7 +83,9 @@ class _SendScreenState extends State<SendScreen> {
         );
       } else {
         setState(() {
-          qrData = '$_amount$working_notes';
+          qrData = '$working_notes';
+          // qrData = '';
+          print(qrData);
         });
       }
     }
@@ -157,14 +159,17 @@ class _SendScreenState extends State<SendScreen> {
               child: const Text('Send'),
             ),
             const SizedBox(height: 20),
-            qrData.isNotEmpty?QrImageView(
-              size: 300,
-              data: qrData,
-              version: 1,
-              // embeddedImage: AssetImage('assets/img/erupi.png'),
-              eyeStyle: const QrEyeStyle(
-                eyeShape: QrEyeShape.square,
-                color: Colors.indigoAccent,
+            qrData.isNotEmpty?SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: QrImageView(
+                size: 300,
+                data: qrData,
+                version: QrVersions.auto,
+                // embeddedImage: AssetImage('assets/img/erupi.png'),
+                eyeStyle: const QrEyeStyle(
+                  eyeShape: QrEyeShape.square,
+                  color: Colors.indigoAccent,
+                ),
               ),
             ):const Text(
               'Please enter valid amount',

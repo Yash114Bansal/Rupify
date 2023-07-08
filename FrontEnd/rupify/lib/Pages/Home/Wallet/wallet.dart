@@ -135,6 +135,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     ),
                   ),
                   Expanded(
+
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,

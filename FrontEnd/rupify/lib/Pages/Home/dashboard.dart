@@ -4,15 +4,111 @@ import 'package:rupify/Pages/Home/Send%20Money/send.dart';
 import 'package:rupify/Pages/Home/Transactions.dart';
 import 'package:rupify/Pages/Home/Wallet/wallet.dart';
 import 'package:rupify/Pages/Home/Contacts/contacts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-class dashboard extends StatelessWidget {
-  dashboard({Key? key}) : super(key: key);
-  Map<String, int> Note_Data = {
-    '123123123':2000,
-    '123123321':10,
-    '312321123':500,
-  };
+import '../../Services/balance_statements.dart';
+
+class Dashboard extends StatefulWidget {
+  final String Aadhar_Number;
+  Dashboard({required this.Aadhar_Number});
+
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
+  double _balance = 0;
+  double _toShow = 0;
+  Map<String, int> Note_Data = {};
+  // String Aadhar_Number = '1234-5678-1234-5678';
+  String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
+  String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Notes fetched successfully.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _fetchData() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+    print("chachhca");
+    bool result = true;
+    if (result) {
+      print("chachhca");
+      final response = await http.post(
+        Uri.parse(Rupify_api),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"aadhar": '111111111112'}),
+      );
+      final responseData = jsonDecode(response.body);
+      print(responseData);
+      List<dynamic> notes = responseData['notes'];
+      for (dynamic note in notes) {
+        String real_note = note.split("::")[0];
+        print(real_note);
+        final response2 = await http.post(
+          Uri.parse(Get_Val_api),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"note": real_note}),
+        );
+        int responseData = int.parse(response2.body);
+        Note_Data[note] = responseData;
+        for (var value in Note_Data.values) {
+          _balance += value;
+        }
+      }
+      print(Note_Data);
+      Navigator.pop(context);
+      await _showSuccessDialog();
+    }
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Not connected to the internet.'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+      Navigator.pop(context);
+      return;
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +220,15 @@ class dashboard extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              // Handle button press
+
+                              setState(() {
+                                _fetchData();
+                              });
+                              setState(() {
+                                _toShow = _balance;
+                              });
+
+
                             },
                             child: Column(
                               children: [
@@ -157,7 +261,7 @@ class dashboard extends StatelessWidget {
               right: MediaQuery.of(context).size.width * 0.1,
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
-                child: const Card(
+                child:  Card(
                   color: Colors.transparent,
                   elevation: 0,
                   child: Center(
@@ -174,7 +278,7 @@ class dashboard extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            '₹ 2,500',
+                            '$_toShow',
                             style: TextStyle(
                               fontSize: 45,
                               fontWeight: FontWeight.bold,
@@ -202,97 +306,97 @@ class dashboard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height * 0.43,
-              left: MediaQuery.of(context).size.width * 0.12,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child:Row(
-                children: [
-                  InkWell(
-                    onTap: ()=>{},
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(
-                            'assets/Icons/internet.png',
-                          width: 50,
-                          height: 50
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Internet',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                top: MediaQuery.of(context).size.height * 0.43,
+                left: MediaQuery.of(context).size.width * 0.12,
+                right: MediaQuery.of(context).size.width * 0.1,
+                child:Row(
+                  children: [
+                    InkWell(
+                      onTap: ()=>{},
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.asset(
+                              'assets/Icons/internet.png',
+                              width: 50,
+                              height: 50
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 28),
-                  InkWell(
-                    onTap: ()=>{},
-                    child: Column(
-                      children: [
-                        Image.asset(
-                            'assets/Icons/electricity.png',
-                            width: 50,
-                            height: 50
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Electricity',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(height: 5),
+                          Text(
+                            'Internet',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 28),
-                  InkWell(
-                    onTap: ()=>{},
-                    child: Column(
-                      children: [
-                        Image.asset(
-                            'assets/Icons/merchant.png',
-                            width: 50,
-                            height: 50
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Merchant',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                    SizedBox(width: 28),
+                    InkWell(
+                      onTap: ()=>{},
+                      child: Column(
+                        children: [
+                          Image.asset(
+                              'assets/Icons/electricity.png',
+                              width: 50,
+                              height: 50
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 28),
-                  InkWell(
-                    onTap: ()=>{},
-                    child: Column(
-                      children: [
-                        Image.asset(
-                            'assets/Icons/more.png',
-                            width: 50,
-                            height: 50
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'More',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(height: 5),
+                          Text(
+                            'Electricity',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              )
+                    SizedBox(width: 28),
+                    InkWell(
+                      onTap: ()=>{},
+                      child: Column(
+                        children: [
+                          Image.asset(
+                              'assets/Icons/merchant.png',
+                              width: 50,
+                              height: 50
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Merchant',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 28),
+                    InkWell(
+                      onTap: ()=>{},
+                      child: Column(
+                        children: [
+                          Image.asset(
+                              'assets/Icons/more.png',
+                              width: 50,
+                              height: 50
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'More',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
             ),
             Positioned(
               top: MediaQuery.of(context).size.height * 0.56,
@@ -328,7 +432,7 @@ class dashboard extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 27,
                             child: Text(
-                                Contacts[index][0],
+                              Contacts[index][0],
                               style: TextStyle(
                                 color: Colors.white,
                               ),
