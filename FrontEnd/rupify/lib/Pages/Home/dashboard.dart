@@ -5,8 +5,6 @@ class dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('This will be our Dashboard'),
-    );
+    return ;
   }
 }
