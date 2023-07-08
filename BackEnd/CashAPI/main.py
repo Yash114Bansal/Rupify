@@ -30,7 +30,12 @@ class cash_note(BaseModel):
     note :str
 
 
-database = f"{getcwd()}/BackEnd/CashAPI/money.json"
+# database = f"{getcwd()}/BackEnd/CashAPI/money.json"
+
+with open("/tmp/database.json","w+") as f:
+    f.write("{}")
+
+database = "/tmp/database.json"
 
 @app.post("/getval")
 async def getval(n:cash_note):
