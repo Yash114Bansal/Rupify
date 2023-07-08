@@ -90,3 +90,30 @@ def get_money(money_get: money_get):
         f.write(json.dumps(user_data))
 
     return JSONResponse(content=to_return)
+
+@app.post("/transfer")
+def get_money(shopkeeper: shopkeeper):
+    with open("pending_database.json", "r") as f:
+        total_data = json.loads(f.read())
+
+    sender_aadhar, note_number = decrypt_message(
+        key, shopkeeper.note_code.encode()).split("::")
+    
+    note_number = re.sub(r'[^\x20-\x7E]+', '',note_number.encode().decode("utf-8", "ignore"))
+    # print(sender_aadhar,note_number)
+    if (not total_data.get(sender_aadhar)):
+        total_data[sender_aadhar] = []
+
+    # if(note_number in total_data[sender_aadhar]):
+    if (shopkeeper.note_code in total_data[sender_aadhar]):
+        return HTMLResponse(content="User Does Not Have Ownership", status_code=406)
+
+    total_data[sender_aadhar].append(shopkeeper.note_code)
+
+    with open("pending_database.json", "w") as f:
+        f.write(json.dumps(total_data))
+
+    new_note_number = f"{shopkeeper.shopkeeper_aadhar}::{note_number}"
+    encrypted_note = encrypt_message(key, new_note_number.encode())
+
+    return {"note": encrypted_note}
