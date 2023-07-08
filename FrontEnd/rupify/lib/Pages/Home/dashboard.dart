@@ -3,6 +3,7 @@ import 'package:rupify/Pages/Home/Recieve%20Money/scan.dart';
 import 'package:rupify/Pages/Home/Send%20Money/send.dart';
 import 'package:rupify/Pages/Home/Transactions.dart';
 import 'package:rupify/Pages/Home/Wallet/wallet.dart';
+import 'package:rupify/Pages/Home/Contacts/contacts.dart';
 
 class dashboard extends StatelessWidget {
   dashboard({Key? key}) : super(key: key);
@@ -320,15 +321,20 @@ class dashboard extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        CircleAvatar(
-                          radius: 27,
-                          child: Text(
-                              Contacts[index][0],
-                            style: TextStyle(
-                              color: Colors.white,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Contacts1(data: Contacts[index])));
+                          },
+                          child: CircleAvatar(
+                            radius: 27,
+                            child: Text(
+                                Contacts[index][0],
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
+                            backgroundColor: Colors.blue,
                           ),
-                          backgroundColor: Colors.blue,
                         ),
                         SizedBox(height: 4),
                         Text(
