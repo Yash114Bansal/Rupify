@@ -44,3 +44,25 @@ class shopkeeper(BaseModel):
 
 
 app = FastAPI()
+
+
+@app.post("/deposite")
+def depoiste_money(cash: cash):
+
+    with open("cash_database.json", "r") as f:
+        user_data = json.loads(f.read())
+
+    if (not user_data.get(cash.aadhar)):
+        user_data[cash.aadhar] = []
+
+    data = {
+        "note-number": cash.note,
+        "purpose": cash.purpose
+    }
+
+    user_data[cash.aadhar].append(data)
+
+    with open("cash_database.json", "w") as f:
+        f.write(json.dumps(user_data))
+
+    return HTMLResponse(content="Done", status_code=200)
