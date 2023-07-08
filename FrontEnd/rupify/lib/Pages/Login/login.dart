@@ -109,7 +109,7 @@ class login extends StatelessWidget {
                       height: 51,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context, '/dashboard');
+                          Navigator.pushNamed(context, '/dashboard');
                         },
                         child: const Text(
                           'CONTINUE',
