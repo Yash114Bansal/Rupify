@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
+from uvicorn import run
 import json
 import base64
 import re
@@ -134,3 +135,5 @@ def get_pending_note(aadhar: str):
         f.write(json.dumps(total_data))
 
     return to_return
+
+run(app,host = '0.0.0.0',port = 3000)
