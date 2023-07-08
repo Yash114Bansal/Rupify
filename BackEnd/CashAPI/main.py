@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad
+from uvicorn import run
 from os import getcwd
 import json 
 import base64
@@ -53,3 +54,5 @@ async def putval(note:cash):
     with open(database,"w") as f:
         f.write(json.dumps(notes))   
     return HTMLResponse(content="Done",status_code = 200)
+
+run(app,host = '0.0.0.0',port = 3000)
