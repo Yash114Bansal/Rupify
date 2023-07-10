@@ -21,7 +21,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
   double _balance = 0;
-  double _toShow = 0;
   Map<String, int> Note_Data = {};
   String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
@@ -37,8 +36,8 @@ class _DashboardState extends State<Dashboard> {
       barrierDismissible: false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: SingleChildScrollView(
+          title: const Text('Success'),
+          content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('Notes fetched successfully.'),
@@ -47,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -62,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
@@ -82,17 +81,17 @@ class _DashboardState extends State<Dashboard> {
         );
         int responseData = int.parse(response2.body);
         Note_Data[note] = responseData;
-        for (var value in Note_Data.values) {
-          _balance += value;
-        }
       }
-      print(Note_Data);
       Navigator.pop(context);
+      double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+      setState(() {
+        _balance = sum;
+      });
       await _showSuccessDialog();
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Not connected to the internet.'),
           duration: Duration(seconds: 4),
         ),
@@ -135,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
                       height: 75,
                     ),
                   ),
-                  SizedBox(width: 175),
+                  const SizedBox(width: 175),
                   IconButton(
                     onPressed: () {
                       // TODO: Handle icon button 2 press
@@ -180,8 +179,8 @@ class _DashboardState extends State<Dashboard> {
                                   width: 48,
                                   height: 48,
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   'Send',
                                   style: TextStyle(
                                     fontSize: 16,
@@ -202,8 +201,8 @@ class _DashboardState extends State<Dashboard> {
                                   width: 48,
                                   height: 48,
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   'Receive',
                                   style: TextStyle(
                                     fontSize: 16,
@@ -215,14 +214,8 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           InkWell(
                             onTap: () {
-                              setState(() {
-                                _fetchData(widget.Aadhar_Number);
-                              });
-                              setState(() {
-                                _toShow = _balance;
-                              });
-
-
+                              print(widget.Aadhar_Number);
+                              _fetchData(widget.Aadhar_Number);
                             },
                             child: Column(
                               children: [
@@ -231,8 +224,8 @@ class _DashboardState extends State<Dashboard> {
                                   width: 48,
                                   height: 48,
                                 ),
-                                SizedBox(height: 5),
-                                Text(
+                                const SizedBox(height: 5),
+                                const Text(
                                   'Fetch',
                                   style: TextStyle(
                                     fontSize: 16,
@@ -263,17 +256,17 @@ class _DashboardState extends State<Dashboard> {
                       scrollDirection: Axis.vertical,
                       child: Column(
                         children: [
-                          Text(
+                          const Text(
                             'Available Balance',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
-                            '$_toShow',
-                            style: TextStyle(
+                            '$_balance',
+                            style: const TextStyle(
                               fontSize: 45,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -290,7 +283,7 @@ class _DashboardState extends State<Dashboard> {
               top: MediaQuery.of(context).size.height * 0.38,
               left: MediaQuery.of(context).size.width * 0.13,
               right: MediaQuery.of(context).size.width * 0.1,
-              child: Text(
+              child: const Text(
                 'Payment List',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -315,8 +308,8 @@ class _DashboardState extends State<Dashboard> {
                               width: 50,
                               height: 50
                           ),
-                          SizedBox(height: 5),
-                          Text(
+                          const SizedBox(height: 5),
+                          const Text(
                             'Internet',
                             style: TextStyle(
                               fontSize: 12,
@@ -326,7 +319,7 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 28),
+                    const SizedBox(width: 28),
                     InkWell(
                       onTap: ()=>{},
                       child: Column(
@@ -336,8 +329,8 @@ class _DashboardState extends State<Dashboard> {
                               width: 50,
                               height: 50
                           ),
-                          SizedBox(height: 5),
-                          Text(
+                          const SizedBox(height: 5),
+                          const Text(
                             'Electricity',
                             style: TextStyle(
                               fontSize: 12,
@@ -347,7 +340,7 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 28),
+                    const SizedBox(width: 28),
                     InkWell(
                       onTap: ()=>{},
                       child: Column(
@@ -357,8 +350,8 @@ class _DashboardState extends State<Dashboard> {
                               width: 50,
                               height: 50
                           ),
-                          SizedBox(height: 5),
-                          Text(
+                          const SizedBox(height: 5),
+                          const Text(
                             'Merchant',
                             style: TextStyle(
                               fontSize: 12,
@@ -368,7 +361,7 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 28),
+                    const SizedBox(width: 28),
                     InkWell(
                       onTap: ()=>{},
                       child: Column(
@@ -378,8 +371,8 @@ class _DashboardState extends State<Dashboard> {
                               width: 50,
                               height: 50
                           ),
-                          SizedBox(height: 5),
-                          Text(
+                          const SizedBox(height: 5),
+                          const Text(
                             'More',
                             style: TextStyle(
                               fontSize: 12,
@@ -396,7 +389,7 @@ class _DashboardState extends State<Dashboard> {
               top: MediaQuery.of(context).size.height * 0.56,
               left: MediaQuery.of(context).size.width * 0.13,
               right: MediaQuery.of(context).size.width * 0.1,
-              child: Text(
+              child: const Text(
                 'People',
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -412,7 +405,7 @@ class _DashboardState extends State<Dashboard> {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.35,
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
                   itemCount: 8,
@@ -427,7 +420,7 @@ class _DashboardState extends State<Dashboard> {
                             radius: 27,
                             child: Text(
                               Contacts[index][0],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
                             ),
@@ -435,10 +428,10 @@ class _DashboardState extends State<Dashboard> {
 
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           Contacts[index],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -453,20 +446,20 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF172A48),
+        backgroundColor: const Color(0xFF172A48),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView()),
+            MaterialPageRoute(builder: (context) => const QrView()),
           );
         },
-        child: Icon(Icons.qr_code_scanner_outlined),
+        child: const Icon(Icons.qr_code_scanner_outlined),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         height: 60,
-        color: Color(0xFF172A48),
-        shape: CircularNotchedRectangle(),
+        color: const Color(0xFF172A48),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -494,7 +487,7 @@ class _DashboardState extends State<Dashboard> {
                 height: 24,
               ),
             ),
-            SizedBox(width: 48),
+            const SizedBox(width: 48),
             IconButton(
               onPressed: () {
                 Navigator.push(
