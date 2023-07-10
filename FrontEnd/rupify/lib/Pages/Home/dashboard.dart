@@ -66,7 +66,8 @@ class _DashboardState extends State<Dashboard> {
       builder: (context) => Center(child: CircularProgressIndicator()),
     );
     print("chachhca");
-    bool result = true;
+    bool result = await InternetConnectionChecker().hasConnection;
+    
     if (result) {
       print("chachhca");
       final response = await http.post(
@@ -437,7 +438,8 @@ class _DashboardState extends State<Dashboard> {
                                 color: Colors.white,
                               ),
                             ),
-                            backgroundColor: Colors.blue,
+                            backgroundColor: (index%2 == 0)?Colors.blue:Colors.blueAccent,
+
                           ),
                         ),
                         SizedBox(height: 4),

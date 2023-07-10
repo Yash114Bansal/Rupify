@@ -39,7 +39,7 @@ class _SendScreenState extends State<SendScreen> {
   }
 
   void _sendMoney() {
-    if (_amount > _balance) {
+    if (_amount >= _balance) {
       // show a pop-up if the amount entered is greater than the available balance
       showDialog(
         context: context,
