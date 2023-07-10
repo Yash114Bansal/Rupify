@@ -39,7 +39,7 @@ class _SendScreenState extends State<SendScreen> {
   }
 
   void _sendMoney() {
-    if (_amount >= _balance) {
+    if (_amount > _balance) {
       // show a pop-up if the amount entered is greater than the available balance
       showDialog(
         context: context,
@@ -58,7 +58,26 @@ class _SendScreenState extends State<SendScreen> {
           );
         },
       );
-    } else {
+    }else if(_amount == 0){
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Warning'),
+            content: const Text('Please Enter Some Amount'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else {
       // perform the transfer
       List<String>? working_notes = getCurrencyNotes(widget.Note_Data, _amount);
       print(working_notes);
