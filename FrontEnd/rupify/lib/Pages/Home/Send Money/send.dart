@@ -21,14 +21,17 @@ class _SendScreenState extends State<SendScreen> {
       _balance += value;
     }
   }
-  List<String>? getCurrencyNotes(Map<String, int?> currencyDict, double p) {
+  List<String>? getCurrencyNotes(Map<String, int> currencyDict, double p) {
     List<String> notes = currencyDict.keys.toList();
-    notes.sort((a, b) => (currencyDict[b] ?? 0) - (currencyDict[a] ?? 0));
+    notes.sort((a, b) => currencyDict[b]!.compareTo(currencyDict[a]!));
     List<String> result = [];
     for (String note in notes) {
-      while (p >= (currencyDict[note] ?? 0)) {
+      if (p >= currencyDict[note]!) {
         result.add(note);
-        p -= (currencyDict[note] ?? 0);
+        p -= currencyDict[note]!;
+      }
+      if (p == 0) {
+        break;
       }
     }
     if (p > 0) {
