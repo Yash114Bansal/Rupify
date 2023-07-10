@@ -67,7 +67,6 @@ class _DashboardState extends State<Dashboard> {
     );
     print("chachhca");
     bool result = await InternetConnectionChecker().hasConnection;
-    
     if (result) {
       print("chachhca");
       final response = await http.post(

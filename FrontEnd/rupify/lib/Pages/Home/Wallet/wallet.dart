@@ -216,7 +216,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             height: 100,
                             width: 100,
                             child: Center(
-                              child: Image.asset('assets/img/duck.png'),
+                              child: Image.asset('assets/Icons/duck.png'),
                             ),
                           ),
                           const Text(
