@@ -21,14 +21,17 @@ class _SendScreenState extends State<SendScreen> {
       _balance += value;
     }
   }
-  List<String>? getCurrencyNotes(Map<String, int?> currencyDict, double p) {
+  List<String>? getCurrencyNotes(Map<String, int> currencyDict, double p) {
     List<String> notes = currencyDict.keys.toList();
-    notes.sort((a, b) => (currencyDict[b] ?? 0) - (currencyDict[a] ?? 0));
+    notes.sort((a, b) => currencyDict[b]!.compareTo(currencyDict[a]!));
     List<String> result = [];
     for (String note in notes) {
-      while (p >= (currencyDict[note] ?? 0)) {
+      if (p >= currencyDict[note]!) {
         result.add(note);
-        p -= (currencyDict[note] ?? 0);
+        p -= currencyDict[note]!;
+      }
+      if (p == 0) {
+        break;
       }
     }
     if (p > 0) {
@@ -39,7 +42,7 @@ class _SendScreenState extends State<SendScreen> {
   }
 
   void _sendMoney() {
-    if (_amount >= _balance) {
+    if (_amount > _balance) {
       // show a pop-up if the amount entered is greater than the available balance
       showDialog(
         context: context,
@@ -58,7 +61,26 @@ class _SendScreenState extends State<SendScreen> {
           );
         },
       );
-    } else {
+    }else if(_amount == 0){
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Warning'),
+            content: const Text('Please Enter Some Amount'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else {
       // perform the transfer
       List<String>? working_notes = getCurrencyNotes(widget.Note_Data, _amount);
       print(working_notes);
