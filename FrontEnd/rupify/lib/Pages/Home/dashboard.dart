@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rupify/Pages/Home/Recieve%20Money/scan.dart';
 import 'package:rupify/Pages/Home/Send%20Money/send.dart';
-import 'package:rupify/Pages/Home/Transactions.dart';
+import 'package:rupify/Pages/Home/Transactions%20History/Transactions.dart';
 import 'package:rupify/Pages/Home/Wallet/wallet.dart';
 import 'package:rupify/Pages/Home/Contacts/contacts.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +12,7 @@ import '../../Services/balance_statements.dart';
 
 class Dashboard extends StatefulWidget {
   final String Aadhar_Number;
-  Dashboard({required this.Aadhar_Number});
+  const Dashboard({super.key, required this.Aadhar_Number});
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -23,7 +23,6 @@ class _DashboardState extends State<Dashboard> {
   double _balance = 0;
   double _toShow = 0;
   Map<String, int> Note_Data = {};
-  // String Aadhar_Number = '1234-5678-1234-5678';
   String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   @override
@@ -59,31 +58,27 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void _fetchData() async {
+  void _fetchData(String aadharNumber) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => Center(child: CircularProgressIndicator()),
     );
-    print("chachhca");
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
-      print("chachhca");
       final response = await http.post(
         Uri.parse(Rupify_api),
         headers: {"Content-Type": "application/json"},
-        body: json.encode({"aadhar": '111111111112'}),
+        body: json.encode({"aadhar": aadharNumber}),
       );
       final responseData = jsonDecode(response.body);
-      print(responseData);
       List<dynamic> notes = responseData['notes'];
       for (dynamic note in notes) {
-        String real_note = note.split("::")[0];
-        print(real_note);
+        String realNote = note.split("::")[0];
         final response2 = await http.post(
           Uri.parse(Get_Val_api),
           headers: {"Content-Type": "application/json"},
-          body: json.encode({"note": real_note}),
+          body: json.encode({"note": realNote}),
         );
         int responseData = int.parse(response2.body);
         Note_Data[note] = responseData;
@@ -220,9 +215,8 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           InkWell(
                             onTap: () {
-
                               setState(() {
-                                _fetchData();
+                                _fetchData(widget.Aadhar_Number);
                               });
                               setState(() {
                                 _toShow = _balance;

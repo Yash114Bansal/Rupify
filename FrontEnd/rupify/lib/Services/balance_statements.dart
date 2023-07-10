@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-
-
 class Statement{
   String name;
   String amount;

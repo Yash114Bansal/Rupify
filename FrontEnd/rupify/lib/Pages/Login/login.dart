@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../Home/dashboard.dart';
+
 class login extends StatelessWidget {
-  const login({Key? key}) : super(key: key);
+  login({Key? key}) : super(key: key);
+  final TextEditingController _textFieldController = TextEditingController();
+
+  void _navigateToDestinationPage(BuildContext context) {
+    String data = _textFieldController.text;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Dashboard(Aadhar_Number: data),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +70,7 @@ class login extends StatelessWidget {
                         borderRadius: BorderRadius.circular(11),
                       ),
                       child: TextField(
+                        controller: _textFieldController,
                         keyboardType: TextInputType.number,
                         maxLength: 12,
                         decoration: InputDecoration(
@@ -64,6 +78,7 @@ class login extends StatelessWidget {
                           hintStyle: TextStyle(
                             color: Colors.black.withOpacity(0.6),
                           ),
+
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 10,
@@ -109,7 +124,7 @@ class login extends StatelessWidget {
                       height: 51,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/dashboard');
+                          _navigateToDestinationPage(context);
                         },
                         child: const Text(
                           'CONTINUE',

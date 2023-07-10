@@ -10,8 +10,6 @@ void main(){
     routes: {
       '/login':(context)=>login(),
       '/dashboard':(context)=>Dashboard(Aadhar_Number: '111111111112'),
-      // '/scan':(context)=>,//TODO create a scanner page and add here
-      // '/qr':(context)=>,//TODO create a qr generator and then add here
     },
   ));
 }
