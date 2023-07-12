@@ -71,7 +71,10 @@ class _DashboardState extends State<Dashboard> {
         body: json.encode({"aadhar": aadharNumber}),
       );
       final responseData = jsonDecode(response.body);
+      print(responseData);
       List<dynamic> notes = responseData['notes'];
+      print("notes------------");
+      print(notes);
       for (dynamic note in notes) {
         String realNote = note.split("::")[0];
         final response2 = await http.post(
@@ -192,7 +195,10 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           InkWell(
                             onTap: () {
-                              // Handle button press
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const QrView()),
+                              );
                             },
                             child: Column(
                               children: [
