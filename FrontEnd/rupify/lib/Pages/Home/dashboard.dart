@@ -197,7 +197,7 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const QrView()),
+                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
                               );
                             },
                             child: Column(
@@ -456,7 +456,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const QrView()),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
           );
         },
         child: const Icon(Icons.qr_code_scanner_outlined),

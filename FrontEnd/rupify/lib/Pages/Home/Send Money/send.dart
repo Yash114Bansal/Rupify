@@ -187,7 +187,6 @@ class _SendScreenState extends State<SendScreen> {
                 size: 300,
                 data: qrData,
                 version: QrVersions.auto,
-                // embeddedImage: AssetImage('assets/img/erupi.png'),
                 eyeStyle: const QrEyeStyle(
                   eyeShape: QrEyeShape.square,
                   color: Colors.indigoAccent,

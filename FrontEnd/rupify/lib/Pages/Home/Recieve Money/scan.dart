@@ -1,13 +1,16 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
+import 'package:http/http.dart' as http;
 
 class Qr extends StatelessWidget {
-  const Qr({Key? key}) : super(key: key);
+  final Map<String, int> Note_Data;
+  Qr({Key? key,required this.Note_Data}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class Qr extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const QrView(),
+              builder: (context) => QrView(Note_Data: Note_Data),
             ));
           },
           child: const Text('qrView'),
@@ -28,7 +31,9 @@ class Qr extends StatelessWidget {
 }
 
 class QrView extends StatefulWidget {
-  const QrView({Key? key}) : super(key: key);
+  final Map<String, int> Note_Data;
+
+  const QrView({Key? key,required this.Note_Data}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QrViewState();
@@ -38,6 +43,7 @@ class _QrViewState extends State<QrView> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -48,6 +54,47 @@ class _QrViewState extends State<QrView> {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();
+  }
+  void _makePayment(String? data) async{
+          controller?.pauseCamera();
+          // print(data);
+          if(data != null && data.isNotEmpty){
+            List<String> list = data
+                .replaceAll('[', '')
+                .replaceAll(']', '')
+                .split(',')
+                .map((element) => element.trim())
+                .toList();
+            print("-----------------------------");
+            print(list);
+            print("-----------------------------");
+            for (dynamic note in list) {
+              String realNote = note.split("::")[0];
+              print(realNote);
+              print("-------................-----------------");
+              final response2 = await http.post(
+                Uri.parse(Get_Val_api),
+                headers: {"Content-Type": "application/json"},
+                body: json.encode({"note": realNote}),
+              );
+
+              print(response2.body);
+              print("_______________________--------------------------__________________..............:))))))");
+              int responseData = int.parse(response2.body);
+              widget.Note_Data[note] = responseData;
+            }
+            print(widget.Note_Data);
+          }
+          else{
+            //TODO add error box
+          }
+
+
+          //TODO Purpose check
+          // for (String note in list){
+          //
+          // }
+
   }
 
   @override
@@ -65,7 +112,8 @@ class _QrViewState extends State<QrView> {
                 children: <Widget>[
                   if (result != null)
                     Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                        'Data:')
+
                   else
                     const Text('Scan a code'),
                   Row(
@@ -148,8 +196,6 @@ class _QrViewState extends State<QrView> {
         MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -171,7 +217,9 @@ class _QrViewState extends State<QrView> {
       setState(() {
         result = scanData;
       });
+      _makePayment(result!.code);
     });
+
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
