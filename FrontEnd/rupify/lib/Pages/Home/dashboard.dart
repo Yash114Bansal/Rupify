@@ -99,7 +99,17 @@ class _DashboardState extends State<Dashboard> {
         headers: {"Content-Type": "application/json"},
         body: widget.Aadhar_Number,
       );
+      List<String> list = response_pending_notes.body
+          .replaceAll('[', '')
+          .replaceAll(']', '')
+          .split(',')
+          .map((element) => element.trim())
+          .toList();
+      for(dynamic note in list){
+          Note_Data.remove(note);
+      }
     }
+
     else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
