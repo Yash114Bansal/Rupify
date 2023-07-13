@@ -40,7 +40,7 @@ class money_get(BaseModel):
 
 
 class shopkeeper(BaseModel):
-    note_code: str
+    note_list: list
     shopkeeper_aadhar: str
 
 
@@ -104,28 +104,39 @@ def get_money(money_get: money_get):
 def get_money(shopkeeper: shopkeeper):
     with open(pending_database, "r") as f:
         total_data = json.loads(f.read())
+    pending_list = []
+    final_return_list = []
+    for notes in shopkeeper.note_list:
+        sender_aadhar, note_number = decrypt_message(
+            key, notes.encode()).split("::")
+        if (not total_data.get(sender_aadhar)):
+            total_data[sender_aadhar] = []
 
-    sender_aadhar, note_number = decrypt_message(
-        key, shopkeeper.note_code.encode()).split("::")
+        # if(note_number in total_data[sender_aadhar]):
+        if (notes in total_data[sender_aadhar]):
+            # return HTMLResponse(content="User Does Not Have Ownership", status_code=406)
+            pending_list.append(notes)
+            
+    if pending_list:
+        return JSONResponse(content={"notes": pending_list},status_code=406)
     
-    note_number = re.sub(r'[^\x20-\x7E]+', '',note_number.encode().decode("utf-8", "ignore"))
-    # print(sender_aadhar,note_number)
-    if (not total_data.get(sender_aadhar)):
-        total_data[sender_aadhar] = []
+    for notes in shopkeeper.note_list:
+        sender_aadhar, note_number = decrypt_message(
+            key, notes.encode()).split("::")
+        
+        note_number = re.sub(r'[^\x20-\x7E]+', '',note_number.encode().decode("utf-8", "ignore"))
 
-    # if(note_number in total_data[sender_aadhar]):
-    if (shopkeeper.note_code in total_data[sender_aadhar]):
-        return HTMLResponse(content="User Does Not Have Ownership", status_code=406)
+        total_data[sender_aadhar].append(notes)
 
-    total_data[sender_aadhar].append(shopkeeper.note_code)
+        with open(pending_database, "w") as f:
+            f.write(json.dumps(total_data))
 
-    with open(pending_database, "w") as f:
-        f.write(json.dumps(total_data))
+        new_note_number = f"{shopkeeper.shopkeeper_aadhar}::{note_number}"
+        encrypted_note = encrypt_message(key, new_note_number.encode())
+        final_return_list.append(encrypted_note)
 
-    new_note_number = f"{shopkeeper.shopkeeper_aadhar}::{note_number}"
-    encrypted_note = encrypt_message(key, new_note_number.encode())
+    return JSONResponse(content={"notes": final_return_list},status_code=200)
 
-    return {"note": encrypted_note}
 
 @app.post("/get_pending_note")
 def get_pending_note(aadhar: str):

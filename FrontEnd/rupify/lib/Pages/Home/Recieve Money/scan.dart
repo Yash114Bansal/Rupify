@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 
 class Qr extends StatelessWidget {
   final Map<String, int> Note_Data;
-  Qr({Key? key,required this.Note_Data}) : super(key: key);
+  final String Aadhar_Number;
+  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number}) : super(key: key);
 
 
   @override
@@ -20,7 +21,7 @@ class Qr extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QrView(Note_Data: Note_Data),
+              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,),
             ));
           },
           child: const Text('qrView'),
@@ -32,8 +33,8 @@ class Qr extends StatelessWidget {
 
 class QrView extends StatefulWidget {
   final Map<String, int> Note_Data;
-
-  const QrView({Key? key,required this.Note_Data}) : super(key: key);
+  final String Aadhar_Number;
+  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _QrViewState();
@@ -44,6 +45,7 @@ class _QrViewState extends State<QrView> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
+  String Transfer_api = "https://worried-slug-garment.cyclic.app/transfer";
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -65,25 +67,38 @@ class _QrViewState extends State<QrView> {
                 .split(',')
                 .map((element) => element.trim())
                 .toList();
-            print("-----------------------------");
-            print(list);
-            print("-----------------------------");
-            for (dynamic note in list) {
+            for(dynamic note in list){
               String realNote = note.split("::")[0];
-              print(realNote);
-              print("-------................-----------------");
-              final response2 = await http.post(
-                Uri.parse(Get_Val_api),
+              final response0 = await http.post(
+                Uri.parse(Transfer_api),
                 headers: {"Content-Type": "application/json"},
-                body: json.encode({"note": realNote}),
+                body: json.encode({"note_code": realNote,"shopkeeper_aadhar":widget.Aadhar_Number}),
               );
-
-              print(response2.body);
-              print("_______________________--------------------------__________________..............:))))))");
-              int responseData = int.parse(response2.body);
-              widget.Note_Data[note] = responseData;
+              if(response0.statusCode == 406){
+                //TODO  Error that user does not have ownership
+              }
+              else {
+                String new_note = json.decode(response0.body)["note"];
+                final response_get_value_of_new_note = await http.post(
+                  Uri.parse(Get_Val_api),
+                  headers: {"Content-Type": "application/json"},
+                  body: json.encode({"note": new_note}),
+                );
+                widget.Note_Data[new_note] =
+                    int.parse(response_get_value_of_new_note.body);
+              }
             }
-            print(widget.Note_Data);
+            // for (dynamic note in list) {
+            //   String realNote = note.split("::")[0];
+            //   final response2 = await http.post(
+            //     Uri.parse(Get_Val_api),
+            //     headers: {"Content-Type": "application/json"},
+            //     body: json.encode({"note": realNote}),
+            //   );
+            //
+            //   int responseData = int.parse(response2.body);
+            //   widget.Note_Data[note] = responseData;
+            // }
           }
           else{
             //TODO add error box

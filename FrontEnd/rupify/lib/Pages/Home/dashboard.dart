@@ -22,8 +22,10 @@ class _DashboardState extends State<Dashboard> {
   List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
   double _balance = 0;
   Map<String, int> Note_Data = {};
+  Map<String, int> History = {};
   String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
+  String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,7 @@ class _DashboardState extends State<Dashboard> {
         );
         int responseData = int.parse(response2.body);
         Note_Data[note] = responseData;
+        History[note] = responseData;
       }
       Navigator.pop(context);
       double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
@@ -91,7 +94,46 @@ class _DashboardState extends State<Dashboard> {
         _balance = sum;
       });
       await _showSuccessDialog();
+
+      // Removing Notes that are Used
+      final response_pending_notes = await http.post(
+        Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
+        headers: {"Content-Type": "application/json"},
+      );
+      print("---------__________________________-----------");
+      print(widget.Aadhar_Number);
+      print(response_pending_notes.body);
+      List<String> list = response_pending_notes.body
+          .replaceAll('[', '')
+          .replaceAll(']', '')
+      .replaceAll('"', '')
+          .split(',')
+          .map((element) => element.trim())
+          .toList();
+      print(list);
+      print("++++++++++++_____________++++++++++++++++++++");
+      print(Note_Data);
+      print("++++++++++++_____________++++++++++++++++++++");
+      for(dynamic note in list){
+          print(note+'::0');
+          final response2 = await http.post(
+            Uri.parse(Get_Val_api),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"note": note}),
+          );
+          int responseData = int.parse(response2.body);
+          History[note] = -1*responseData;
+          Note_Data.remove(note+"::0");
+      }
+      sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+      setState(() {
+        _balance = sum;
+      });
+      print("@@@@@@@@@@@@@@@@@@@@@___________++++++++++++++++++++");
+      print(Note_Data);
+      print("2@@@@@@@@@@@@@@@@@@@@@@@@@++++++++++++_____________++++++++++++++++++++");
     }
+
     else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -129,6 +171,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      print(widget.Aadhar_Number);
                       // TODO :Handle icon button 1 press
                     },
                     icon: Image.asset(
@@ -197,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
+                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
                               );
                             },
                             child: Column(
@@ -456,7 +499,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
           );
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
@@ -498,7 +541,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WalletScreen(Note_Data: Note_Data)),
+                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data,)),
                 );
               },
               icon: Image.asset(
