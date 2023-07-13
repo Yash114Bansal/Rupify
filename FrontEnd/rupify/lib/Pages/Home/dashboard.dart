@@ -24,6 +24,7 @@ class _DashboardState extends State<Dashboard> {
   Map<String, int> Note_Data = {};
   String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
+  String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
   @override
   void initState() {
     super.initState();
@@ -91,6 +92,13 @@ class _DashboardState extends State<Dashboard> {
         _balance = sum;
       });
       await _showSuccessDialog();
+
+      // Removing Notes that are Used
+      final response_pending_notes = await http.post(
+        Uri.parse(Pending_Note_api),
+        headers: {"Content-Type": "application/json"},
+        body: widget.Aadhar_Number,
+      );
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,7 +205,7 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
+                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
                               );
                             },
                             child: Column(
@@ -456,7 +464,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,)),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
           );
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
