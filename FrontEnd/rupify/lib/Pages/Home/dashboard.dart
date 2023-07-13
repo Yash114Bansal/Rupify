@@ -104,13 +104,21 @@ class _DashboardState extends State<Dashboard> {
       List<String> list = response_pending_notes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
+      .replaceAll('"', '')
           .split(',')
           .map((element) => element.trim())
           .toList();
       print(list);
+      print("++++++++++++_____________++++++++++++++++++++");
+      print(Note_Data);
+      print("++++++++++++_____________++++++++++++++++++++");
       for(dynamic note in list){
-          Note_Data.remove(note);
+          print(note+'::0');
+          Note_Data.remove(note+"::0");
       }
+      print("@@@@@@@@@@@@@@@@@@@@@___________++++++++++++++++++++");
+      print(Note_Data);
+      print("2@@@@@@@@@@@@@@@@@@@@@@@@@++++++++++++_____________++++++++++++++++++++");
     }
 
     else {
@@ -150,6 +158,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   IconButton(
                     onPressed: () {
+                      print(widget.Aadhar_Number);
                       // TODO :Handle icon button 1 press
                     },
                     icon: Image.asset(
