@@ -116,6 +116,10 @@ class _DashboardState extends State<Dashboard> {
           print(note+'::0');
           Note_Data.remove(note+"::0");
       }
+      sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+      setState(() {
+        _balance = sum;
+      });
       print("@@@@@@@@@@@@@@@@@@@@@___________++++++++++++++++++++");
       print(Note_Data);
       print("2@@@@@@@@@@@@@@@@@@@@@@@@@++++++++++++_____________++++++++++++++++++++");
