@@ -22,6 +22,7 @@ class _DashboardState extends State<Dashboard> {
   List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
   double _balance = 0;
   Map<String, int> Note_Data = {};
+  Map<String, int> History = {};
   String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
@@ -85,6 +86,7 @@ class _DashboardState extends State<Dashboard> {
         );
         int responseData = int.parse(response2.body);
         Note_Data[note] = responseData;
+        History[note] = responseData;
       }
       Navigator.pop(context);
       double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
@@ -114,6 +116,13 @@ class _DashboardState extends State<Dashboard> {
       print("++++++++++++_____________++++++++++++++++++++");
       for(dynamic note in list){
           print(note+'::0');
+          final response2 = await http.post(
+            Uri.parse(Get_Val_api),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"note": note}),
+          );
+          int responseData = int.parse(response2.body);
+          History[note] = -1*responseData;
           Note_Data.remove(note+"::0");
       }
       sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
@@ -532,7 +541,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WalletScreen(Note_Data: Note_Data)),
+                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data,)),
                 );
               },
               icon: Image.asset(

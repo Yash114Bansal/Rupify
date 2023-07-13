@@ -5,22 +5,21 @@ import 'available_notes.dart';
 import '../../../Services/balance_statements.dart';
 
 class WalletScreen extends StatefulWidget {
+  final Map<String, int> History;
   final Map<String, int> Note_Data;
-  WalletScreen({required this.Note_Data});
+  final double Amount;
+  WalletScreen({super.key, required this.History,required this.Amount,required this.Note_Data});
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  double _balance = 0;
-
   List<Statement> transactions = [];
 
   @override
   void initState() {
     super.initState();
-    for (var value in widget.Note_Data.values) {
-      _balance += value;
+    for (var value in widget.History.values) {
       DateTime now = DateTime.now();
       DateTime date = DateTime(
           now.year, now.month, now.day, now.hour, now.minute, now.second);
@@ -77,7 +76,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '₹$_balance',
+                    '${widget.Amount}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -175,7 +174,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Payment from ${transactions[index].name}',
+                                        int.parse(transactions[index]
+                                            .amount) >=
+                                            0?'Payment from ${transactions[index].name}':'Payment to ${transactions[index].name}',
                                         style: TextStyle(
                                           color: int.parse(transactions[index]
                                                       .amount) >=
