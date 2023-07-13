@@ -95,16 +95,19 @@ class _DashboardState extends State<Dashboard> {
 
       // Removing Notes that are Used
       final response_pending_notes = await http.post(
-        Uri.parse(Pending_Note_api),
+        Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
         headers: {"Content-Type": "application/json"},
-        body: widget.Aadhar_Number,
       );
+      print("---------__________________________-----------");
+      print(widget.Aadhar_Number);
+      print(response_pending_notes.body);
       List<String> list = response_pending_notes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
           .split(',')
           .map((element) => element.trim())
           .toList();
+      print(list);
       for(dynamic note in list){
           Note_Data.remove(note);
       }
