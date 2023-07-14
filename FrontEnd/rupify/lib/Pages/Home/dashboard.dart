@@ -106,10 +106,10 @@ class _DashboardState extends State<Dashboard> {
       List<String> list = response_pending_notes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
-      .replaceAll('"', '')
+          .replaceAll('"', '')
           .split(',')
           .map((element) => element.trim())
-      .where((element) => element.isEmpty)
+          .where((element) => element.isNotEmpty)
           .toList();
       print(list);
       print("++++++++++++_____________++++++++++++++++++++");
@@ -346,93 +346,96 @@ class _DashboardState extends State<Dashboard> {
                 top: MediaQuery.of(context).size.height * 0.43,
                 left: MediaQuery.of(context).size.width * 0.12,
                 right: MediaQuery.of(context).size.width * 0.1,
-                child:Row(
-                  children: [
-                    InkWell(
-                      onTap: ()=>{},
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset(
-                              'assets/Icons/internet.png',
-                              width: 50,
-                              height: 50
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            'Internet',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                child:SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: ()=>{},
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(
+                                'assets/Icons/internet.png',
+                                width: 50,
+                                height: 50
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 28),
-                    InkWell(
-                      onTap: ()=>{},
-                      child: Column(
-                        children: [
-                          Image.asset(
-                              'assets/Icons/electricity.png',
-                              width: 50,
-                              height: 50
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            'Electricity',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Internet',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 28),
-                    InkWell(
-                      onTap: ()=>{},
-                      child: Column(
-                        children: [
-                          Image.asset(
-                              'assets/Icons/merchant.png',
-                              width: 50,
-                              height: 50
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            'Merchant',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                      const SizedBox(width: 28),
+                      InkWell(
+                        onTap: ()=>{},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                                'assets/Icons/electricity.png',
+                                width: 50,
+                                height: 50
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 28),
-                    InkWell(
-                      onTap: ()=>{},
-                      child: Column(
-                        children: [
-                          Image.asset(
-                              'assets/Icons/more.png',
-                              width: 50,
-                              height: 50
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            'More',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Electricity',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                      const SizedBox(width: 28),
+                      InkWell(
+                        onTap: ()=>{},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                                'assets/Icons/merchant.png',
+                                width: 50,
+                                height: 50
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Merchant',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 28),
+                      InkWell(
+                        onTap: ()=>{},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                                'assets/Icons/more.png',
+                                width: 50,
+                                height: 50
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'More',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 )
             ),
             Positioned(
