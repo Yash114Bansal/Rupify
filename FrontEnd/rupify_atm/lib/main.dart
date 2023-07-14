@@ -126,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       Navigator.pop(context);
       await _showSuccessDialog();
+      refreshNoteNumber();
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
