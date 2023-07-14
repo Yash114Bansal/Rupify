@@ -9,9 +9,11 @@ from os import getcwd
 import json 
 import base64
 import re
+from requests import post
 
 key_hex = '12345678901234567890123456789ABC'
 key = bytes.fromhex(key_hex)
+rupify_api = "https://worried-slug-garment.cyclic.app/deposite"
 
 def decrypt_message(key, ciphertext_b64):
     ciphertext = base64.b64decode(ciphertext_b64)
@@ -31,6 +33,10 @@ class cash_note(BaseModel):
 
 class aadhar(BaseModel):
     aadhar: str
+
+class numbertransfer(BaseModel):
+    note_list:list
+    receiver_mobile: int
 
 # database = f"{getcwd()}/BackEnd/CashAPI/money.json"
 
@@ -66,44 +72,52 @@ async def putval(note:cash):
 
 Temporary_Users_Data = {
     "111111111111":{
-        "Name":"Yash Bansal",
-        "Profile Pic": "",
+        "Name":"Muskan",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1no3PBWeBNKmt9uf3-u0s4-a0zWdmY1BY",
         "purpose" :[0],
+        "mobile number": "9999999990"
     },
     "111111111112":{
         "Name":"Paras Upadhayay",       
-        "Profile Pic": "",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=15DfPsiWNuTGXF28eKjTuhoqt0P5j1Axw",
         "purpose" :[0],
+        "mobile number": "9999999991"
     },
     "111111111112":{
         "Name":"Dhruval Gupta",      
-        "Profile Pic": "",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1SQg3fn5j8Z6RSCe1BArZu07eQLrftgM-",
         "purpose" :[0],
+        "mobile number": "9999999992"
     },
     "111111111113":{
-        "Name":"Kartik Gupta",
-        "Profile Pic": "",
+        "Name":"Khushi",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=13OKt98UD5fVDIlYQofrzU_VsjwUTfdI1",
         "purpose" :[0],
+        "mobile number": "9999999993"
     },
     "111111111114":{
         "Name":"Pushkar",        
-        "Profile Pic": "",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1yaZP6H5kpBAokDgxwu0wb3RqR4tYtIpJ",
         "purpose" :[0,10],
+        "mobile number": "9999999994"
     },
     "111111111115":{
-        "Name":"Shankar",        
-        "Profile Pic": "",
+        "Name":"Shreya",        
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1ct_WwQ4odGbJAsOANmVBQ4n_nhD5O27r",
         "purpose" :[0],
+        "mobile number": "9999999995"
     },
     "222222222222":{
         "Name":"Nitin",        
-        "Profile Pic": "",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1KoHx8yl7PAyr-sAmzQUzJZqZZgVe88El",
         "purpose" :[0,15],
+        "mobile number": "9999999996"
     },
-    "999999999999":{
+    "989898989898":{
         "Name":"Ramu",        
-        "Profile Pic": "",
+        "Profile Pic": "https://drive.google.com/uc?export=download&id=1tKDo5N7AWYP73dNzTx5mvpy8BsWloD8T",
         "purpose" :[0,15],
+        "mobile number": "9999999997"
     },
     
 }
@@ -116,6 +130,33 @@ async def get_name(n:cash_note):
     if(Temporary_Users_Data.get(aadhar)):
         return JSONResponse(content=Temporary_Users_Data.get(aadhar))
     return HTMLResponse(content="Unknown",status_code=404)
+
+# Not Tested
+
+@app.post("/transer_to_mobile_number")
+async def transer_to_mobile_number(n:numbertransfer):
+    for details in Temporary_Users_Data:
+        if(details["mobile number"] == numbertransfer.receiver_mobile):
+            reciever_aadhar = details
+            break
+    else:
+        return HTMLResponse(content="User Not Found",status_code=404)
+    
+    for notes in numbertransfer.note_list:
+        note = decrypt_message(key,notes)
+        note = note.split("::")[1].strip()
+        headers = {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+        }
+        data = {
+        "aadhar": reciever_aadhar,
+        "note": note,
+        "purpose": 0
+        }
+        post(rupify_api, json=data, headers=headers)
+    
+    return HTMLResponse(content="Done",status_code=200)
 
 
 
