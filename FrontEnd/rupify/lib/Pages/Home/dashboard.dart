@@ -84,12 +84,11 @@ class _DashboardState extends State<Dashboard> {
         Note_Data[note] = responseData;
         History[note] = responseData;
       }
-      Navigator.pop(context);
+
       double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
       setState(() {
         _balance = sum;
       });
-      await _showSuccessDialog();
 
       final response_pending_notes = await http.post(
         Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
@@ -117,6 +116,8 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         _balance = sum;
       });
+      Navigator.pop(context);
+      await _showSuccessDialog();
     }
 
     else {
@@ -245,7 +246,7 @@ class _DashboardState extends State<Dashboard> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
+                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
                         );
                       },
                       child: Column(
@@ -457,7 +458,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
           );
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
