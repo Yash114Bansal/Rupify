@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse,JSONResponse
 from pydantic import BaseModel
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
@@ -29,6 +29,8 @@ class cash(BaseModel):
 class cash_note(BaseModel):
     note :str
 
+class aadhar(BaseModel):
+    aadhar: str
 
 # database = f"{getcwd()}/BackEnd/CashAPI/money.json"
 
@@ -59,5 +61,62 @@ async def putval(note:cash):
     with open(database,"w") as f:
         f.write(json.dumps(notes))   
     return HTMLResponse(content="Done",status_code = 200)
+
+
+
+Temporary_Users_Data = {
+    "111111111111":{
+        "Name":"Yash Bansal",
+        "Profile Pic": "",
+        "purpose" :[0],
+    },
+    "111111111112":{
+        "Name":"Paras Upadhayay",       
+        "Profile Pic": "",
+        "purpose" :[0],
+    },
+    "111111111112":{
+        "Name":"Dhruval Gupta",      
+        "Profile Pic": "",
+        "purpose" :[0],
+    },
+    "111111111113":{
+        "Name":"Kartik Gupta",
+        "Profile Pic": "",
+        "purpose" :[0],
+    },
+    "111111111114":{
+        "Name":"Pushkar",        
+        "Profile Pic": "",
+        "purpose" :[0,10],
+    },
+    "111111111115":{
+        "Name":"Shankar",        
+        "Profile Pic": "",
+        "purpose" :[0],
+    },
+    "222222222222":{
+        "Name":"Nitin",        
+        "Profile Pic": "",
+        "purpose" :[0,15],
+    },
+    "999999999999":{
+        "Name":"Ramu",        
+        "Profile Pic": "",
+        "purpose" :[0,15],
+    },
+    
+}
+
+@app.post("/get_name")
+async def get_name(n:cash_note):
+    aadhar = decrypt_message(key,n.note.encode())
+    aadhar = aadhar.split("::")[0].strip()
+    print(aadhar)
+    if(Temporary_Users_Data.get(aadhar)):
+        return JSONResponse(content=Temporary_Users_Data.get(aadhar))
+    return HTMLResponse(content="Unknown",status_code=404)
+
+
 
 run(app,host = '0.0.0.0', port = 3000 )
