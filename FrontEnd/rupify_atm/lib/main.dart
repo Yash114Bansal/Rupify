@@ -324,7 +324,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _deposite_Money();
                         },
                         child: const Text(
-                          'DEPOSITE',
+                          'DEPOSIT',
                           style: TextStyle(
                             fontSize: 19,
                           ),
