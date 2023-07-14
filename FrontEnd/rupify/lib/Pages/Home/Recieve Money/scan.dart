@@ -67,27 +67,53 @@ class _QrViewState extends State<QrView> {
                 .split(',')
                 .map((element) => element.trim())
                 .toList();
-            for(dynamic note in list){
-              String realNote = note.split("::")[0];
-              final response0 = await http.post(
+            // for(dynamic note in list){
+            //   String realNote = note.split("::")[0];
+            //   final response0 = await http.post(
+            //     Uri.parse(Transfer_api),
+            //     headers: {"Content-Type": "application/json"},
+            //     body: json.encode({"note_code": realNote,"shopkeeper_aadhar":widget.Aadhar_Number}),
+            //   );
+            //   if(response0.statusCode == 406){
+            //     //TODO  Error that user does not have ownership
+            //   }
+            //   else {
+            //     String new_note = json.decode(response0.body)["note"];
+            //     final response_get_value_of_new_note = await http.post(
+            //       Uri.parse(Get_Val_api),
+            //       headers: {"Content-Type": "application/json"},
+            //       body: json.encode({"note": new_note}),
+            //     );
+            //     widget.Note_Data[new_note] =
+            //         int.parse(response_get_value_of_new_note.body);
+            //   }
+            // }
+            List<String> Note_Without_Purpose =[];
+            for (dynamic note in list){
+              Note_Without_Purpose.add(note.split("::")[0]);
+              //TODO Purpose Check
+            }
+            final response0 = await http.post(
                 Uri.parse(Transfer_api),
                 headers: {"Content-Type": "application/json"},
-                body: json.encode({"note_code": realNote,"shopkeeper_aadhar":widget.Aadhar_Number}),
-              );
-              if(response0.statusCode == 406){
-                //TODO  Error that user does not have ownership
-              }
-              else {
-                String new_note = json.decode(response0.body)["note"];
-                final response_get_value_of_new_note = await http.post(
-                  Uri.parse(Get_Val_api),
-                  headers: {"Content-Type": "application/json"},
-                  body: json.encode({"note": new_note}),
-                );
-                widget.Note_Data[new_note] =
-                    int.parse(response_get_value_of_new_note.body);
+                body: json.encode({"note_list": Note_Without_Purpose,"shopkeeper_aadhar":widget.Aadhar_Number}),
+            );
+            List<String> New_Note_List = json.decode(response0.body)["note"];
+            if(response0.statusCode == 406){
+                  //TODO USer have not ownership of following notes that are in new note list
+            }else{
+              for(dynamic note in New_Note_List){
+                    final response_get_value_of_new_note = await http.post(
+                      Uri.parse(Get_Val_api),
+                      headers: {"Content-Type": "application/json"},
+                      body: json.encode({"note": note}),
+                    );
+                    widget.Note_Data[note] =
+                        int.parse(response_get_value_of_new_note.body);
+                  }
               }
             }
+
             // for (dynamic note in list) {
             //   String realNote = note.split("::")[0];
             //   final response2 = await http.post(
@@ -99,10 +125,8 @@ class _QrViewState extends State<QrView> {
             //   int responseData = int.parse(response2.body);
             //   widget.Note_Data[note] = responseData;
             // }
-          }
-          else{
-            //TODO add error box
-          }
+
+
 
 
           //TODO Purpose check
