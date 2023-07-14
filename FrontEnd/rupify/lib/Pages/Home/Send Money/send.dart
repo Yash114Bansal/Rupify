@@ -118,6 +118,13 @@ class _SendScreenState extends State<SendScreen> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Handle back button press
+              Navigator.of(context).pop();
+            },
+          ),
           title: const Text(
             'Transfer',
             style: TextStyle(
