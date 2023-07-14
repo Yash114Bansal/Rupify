@@ -16,7 +16,6 @@ class _SendScreenState extends State<SendScreen> {
   @override
   void initState() {
     super.initState();
-    // calculate the balance from Note_Data when the widget is first initialized
     for (var value in widget.Note_Data.values) {
       _balance += value;
     }
@@ -43,7 +42,6 @@ class _SendScreenState extends State<SendScreen> {
 
   void _sendMoney() {
     if (_amount > _balance) {
-      // show a pop-up if the amount entered is greater than the available balance
       showDialog(
         context: context,
         builder: (context) {
@@ -81,11 +79,9 @@ class _SendScreenState extends State<SendScreen> {
       );
     }
     else {
-      // perform the transfer
       List<String>? working_notes = getCurrencyNotes(widget.Note_Data, _amount);
-      print(working_notes);
       if (working_notes == null) {
-        // show a pop-up if the amount cannot be made using available notes
+
         showDialog(
           context: context,
           builder: (context) {
@@ -106,8 +102,6 @@ class _SendScreenState extends State<SendScreen> {
       } else {
         setState(() {
           qrData = '$working_notes';
-          // qrData = '';
-          print(qrData);
         });
       }
     }

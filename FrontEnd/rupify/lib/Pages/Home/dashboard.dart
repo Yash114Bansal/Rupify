@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../../Services/balance_statements.dart';
 
 class Dashboard extends StatefulWidget {
   final String Aadhar_Number;
@@ -35,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _showSuccessDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Success'),
@@ -73,10 +72,7 @@ class _DashboardState extends State<Dashboard> {
         body: json.encode({"aadhar": aadharNumber}),
       );
       final responseData = jsonDecode(response.body);
-      print(responseData);
       List<dynamic> notes = responseData['notes'];
-      print("notes------------");
-      print(notes);
       for (dynamic note in notes) {
         String realNote = note.split("::")[0];
         final response2 = await http.post(
@@ -95,14 +91,10 @@ class _DashboardState extends State<Dashboard> {
       });
       await _showSuccessDialog();
 
-      // Removing Notes that are Used
       final response_pending_notes = await http.post(
         Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
         headers: {"Content-Type": "application/json"},
       );
-      print("---------__________________________-----------");
-      print(widget.Aadhar_Number);
-      print(response_pending_notes.body);
       List<String> list = response_pending_notes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
@@ -111,12 +103,7 @@ class _DashboardState extends State<Dashboard> {
           .map((element) => element.trim())
           .where((element) => element.isNotEmpty)
           .toList();
-      print(list);
-      print("++++++++++++_____________++++++++++++++++++++");
-      print(Note_Data);
-      print("++++++++++++_____________++++++++++++++++++++");
       for(dynamic note in list){
-          print(note+'::0');
           final response2 = await http.post(
             Uri.parse(Get_Val_api),
             headers: {"Content-Type": "application/json"},
@@ -130,9 +117,6 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         _balance = sum;
       });
-      print("@@@@@@@@@@@@@@@@@@@@@___________++++++++++++++++++++");
-      print(Note_Data);
-      print("2@@@@@@@@@@@@@@@@@@@@@@@@@++++++++++++_____________++++++++++++++++++++");
     }
 
     else {
@@ -172,7 +156,6 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      print(widget.Aadhar_Number);
                       // TODO :Handle icon button 1 press
                     },
                     icon: Image.asset(
@@ -264,7 +247,6 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           InkWell(
                             onTap: () {
-                              print(widget.Aadhar_Number);
                               _fetchData(widget.Aadhar_Number);
                             },
                             child: Column(
@@ -519,7 +501,7 @@ class _DashboardState extends State<Dashboard> {
           children: [
             IconButton(
               onPressed: () {
-                // Handle icon button 1 press
+                // TODO Handle icon button 1 press
               },
               icon: Image.asset(
                 'assets/Icons/home.png',
@@ -556,7 +538,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             IconButton(
               onPressed: () {
-                // Handle icon button 4 press
+                // TODO Handle icon button 4 press
               },
               icon: const Icon(Icons.person, color: Colors.white),
             ),
