@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../Recieve Money/scan.dart';
 import 'available_notes.dart';
 // import 'package:rupify/services/balance_statements.dart';
 import '../../../Services/balance_statements.dart';
@@ -8,7 +9,8 @@ class WalletScreen extends StatefulWidget {
   final Map<String, int> History;
   final Map<String, int> Note_Data;
   final double Amount;
-  WalletScreen({super.key, required this.History,required this.Amount,required this.Note_Data});
+  final String Aadhar_Number;
+  WalletScreen({super.key, required this.History,required this.Amount,required this.Note_Data,required this.Aadhar_Number});
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -159,11 +161,11 @@ class _WalletScreenState extends State<WalletScreen> {
                                   ),
                                   const SizedBox(width: 10),
                                   Icon(
-                                    int.parse(transactions[index].amount) <= 0
+                                    int.parse(transactions[transactions.length-1-index].amount) <= 0
                                         ? Icons.arrow_circle_down_outlined
                                         : Icons.arrow_circle_up_outlined,
                                     color:
-                                        int.parse(transactions[index].amount) >=
+                                        int.parse(transactions[transactions.length-1-index].amount) >=
                                                 0
                                             ? Colors.green
                                             : Colors.red,
@@ -174,11 +176,11 @@ class _WalletScreenState extends State<WalletScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        int.parse(transactions[index]
+                                        int.parse(transactions[transactions.length-1-index]
                                             .amount) >=
-                                            0?'Payment from ${transactions[index].name}':'Payment to ${transactions[index].name}',
+                                            0?'Payment from ${transactions[transactions.length-1-index].name}':'Payment to ${transactions[transactions.length-1-index].name}',
                                         style: TextStyle(
-                                          color: int.parse(transactions[index]
+                                          color: int.parse(transactions[transactions.length-1-index]
                                                       .amount) >=
                                                   0
                                               ? Colors.green
@@ -187,9 +189,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        transactions[index].date,
+                                        transactions[transactions.length-1-index].date,
                                         style: TextStyle(
-                                          color: int.parse(transactions[index]
+                                          color: int.parse(transactions[transactions.length-1-index]
                                                       .amount) >=
                                                   0
                                               ? Colors.green
@@ -201,10 +203,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    '${transactions[index].amount}₹',
+                                    '${transactions[transactions.length-1-index].amount}₹',
                                     style: TextStyle(
                                       color: int.parse(
-                                                  transactions[index].amount) >=
+                                                  transactions[transactions.length-1-index].amount) >=
                                               0
                                           ? Colors.green
                                           : Colors.red,
@@ -254,7 +256,12 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
                 elevation: 5,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,)),
+                );
+              },
               child: const Text(
                 'Make Payment',
                 style: TextStyle(
