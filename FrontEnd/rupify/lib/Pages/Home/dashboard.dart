@@ -527,7 +527,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data,)),
+                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data, Aadhar_Number: widget.Aadhar_Number,)),
                 );
               },
               icon: Image.asset(
