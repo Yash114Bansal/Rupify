@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../../Services/balance_statements.dart';
 
 class Dashboard extends StatefulWidget {
   final String Aadhar_Number;
@@ -35,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _showSuccessDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Success'),
@@ -73,10 +72,7 @@ class _DashboardState extends State<Dashboard> {
         body: json.encode({"aadhar": aadharNumber}),
       );
       final responseData = jsonDecode(response.body);
-      print(responseData);
       List<dynamic> notes = responseData['notes'];
-      print("notes------------");
-      print(notes);
       for (dynamic note in notes) {
         String realNote = note.split("::")[0];
         final response2 = await http.post(
@@ -95,14 +91,10 @@ class _DashboardState extends State<Dashboard> {
       });
       await _showSuccessDialog();
 
-      // Removing Notes that are Used
       final response_pending_notes = await http.post(
         Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
         headers: {"Content-Type": "application/json"},
       );
-      print("---------__________________________-----------");
-      print(widget.Aadhar_Number);
-      print(response_pending_notes.body);
       List<String> list = response_pending_notes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
@@ -111,12 +103,7 @@ class _DashboardState extends State<Dashboard> {
           .map((element) => element.trim())
           .where((element) => element.isNotEmpty)
           .toList();
-      print(list);
-      print("++++++++++++_____________++++++++++++++++++++");
-      print(Note_Data);
-      print("++++++++++++_____________++++++++++++++++++++");
       for(dynamic note in list){
-          print(note+'::0');
           final response2 = await http.post(
             Uri.parse(Get_Val_api),
             headers: {"Content-Type": "application/json"},
@@ -130,9 +117,6 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         _balance = sum;
       });
-      print("@@@@@@@@@@@@@@@@@@@@@___________++++++++++++++++++++");
-      print(Note_Data);
-      print("2@@@@@@@@@@@@@@@@@@@@@@@@@++++++++++++_____________++++++++++++++++++++");
     }
 
     else {
@@ -161,302 +145,273 @@ class _DashboardState extends State<Dashboard> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.05,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      print(widget.Aadhar_Number);
-                      // TODO :Handle icon button 1 press
-                    },
-                    icon: Image.asset(
-                      'assets/Icons/profile.png',
-                      width: 75,
-                      height: 75,
-                    ),
-                  ),
-                  const SizedBox(width: 175),
-                  IconButton(
-                    onPressed: () {
-                      // TODO: Handle icon button 2 press
-                    },
-                    icon: Image.asset(
-                      'assets/Icons/notification.png',
-                      width: 75,
-                      height: 75,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.23,
-              left: MediaQuery.of(context).size.width * 0.1,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.115,
-                child: SingleChildScrollView(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data)),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/Icons/send.png',
-                                  width: 48,
-                                  height: 48,
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  'Send',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/Icons/receive.png',
-                                  width: 48,
-                                  height: 48,
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  'Receive',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              print(widget.Aadhar_Number);
-                              _fetchData(widget.Aadhar_Number);
-                            },
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/Icons/fetch.png',
-                                  width: 48,
-                                  height: 48,
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  'Fetch',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.030),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // TODO :Handle icon button 1 press
+                  },
+                  iconSize: 40,
+                  icon: Image.asset(
+                    'assets/Icons/profile.png',
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.1,
-              left: MediaQuery.of(context).size.width * 0.1,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
-                child:  Card(
-                  color: Colors.transparent,
-                  elevation: 0,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Available Balance',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '$_balance',
-                            style: const TextStyle(
-                              fontSize: 45,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.65),
+                IconButton(
+                  onPressed: () {
+                    // TODO: Handle icon button 2 press
+                  },
+                  iconSize: 40,
+                  icon: Image.asset(
+                    'assets/Icons/notification.png',
                   ),
                 ),
-              ),
+              ],
             ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.38,
-              left: MediaQuery.of(context).size.width * 0.13,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: const Text(
-                'Payment List',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black
-                ),
-              ),
-            ),
-            Positioned(
-                top: MediaQuery.of(context).size.height * 0.43,
-                left: MediaQuery.of(context).size.width * 0.12,
-                right: MediaQuery.of(context).size.width * 0.1,
-                child:SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.112,
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: ()=>{},
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                                'assets/Icons/internet.png',
-                                width: 50,
-                                height: 50
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Internet',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                      const Text(
+                        'Available Balance',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 28),
-                      InkWell(
-                        onTap: ()=>{},
-                        child: Column(
-                          children: [
-                            Image.asset(
-                                'assets/Icons/electricity.png',
-                                width: 50,
-                                height: 50
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Electricity',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 28),
-                      InkWell(
-                        onTap: ()=>{},
-                        child: Column(
-                          children: [
-                            Image.asset(
-                                'assets/Icons/merchant.png',
-                                width: 50,
-                                height: 50
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Merchant',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 28),
-                      InkWell(
-                        onTap: ()=>{},
-                        child: Column(
-                          children: [
-                            Image.asset(
-                                'assets/Icons/more.png',
-                                width: 50,
-                                height: 50
-                            ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'More',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                      const SizedBox(height: 4),
+                      Text(
+                        '$_balance',
+                        style: const TextStyle(
+                          fontSize: 45,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       )
                     ],
                   ),
-                )
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.56,
-              left: MediaQuery.of(context).size.width * 0.13,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: const Text(
-                'People',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                    color: Colors.black
                 ),
               ),
             ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.57,
-              left: MediaQuery.of(context).size.width * 0.07,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
+            SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.05),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data)),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/Icons/send.png',
+                              width: 48,
+                              height: 48,
+                            ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              'Send',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,)),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/Icons/receive.png',
+                            width: 48,
+                            height: 48,
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            'Receive',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _fetchData(widget.Aadhar_Number);
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            'assets/Icons/fetch.png',
+                            width: 48,
+                            height: 48,
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            'Fetch',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+             Padding(
+              padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.20),
+              child: Text(
+                'Payment List',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Spacer(),
+                InkWell(
+                  onTap: () => {},
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        'assets/Icons/internet.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'Internet',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
+                InkWell(
+                  onTap: () => {},
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/Icons/electricity.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'Electricity',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
+                InkWell(
+                  onTap: () => {},
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/Icons/merchant.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'Merchant',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
+                InkWell(
+                  onTap: () => {},
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/Icons/more.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        'More',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            Padding(
+              padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.27),
+              child: const Text(
+                'People',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -471,17 +426,16 @@ class _DashboardState extends State<Dashboard> {
                           },
                           child: CircleAvatar(
                             radius: 27,
+                            backgroundColor: (index%2 == 0)?Colors.blue:Colors.blueAccent,
                             child: Text(
                               Contacts[index][0],
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
                             ),
-                            backgroundColor: (index%2 == 0)?Colors.blue:Colors.blueAccent,
-
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.002),
                         Text(
                           Contacts[index],
                           style: const TextStyle(
@@ -510,7 +464,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        height: 60,
+        height: 80,
         color: const Color(0xFF172A48),
         shape: const CircularNotchedRectangle(),
         notchMargin: 10.0,
@@ -519,7 +473,7 @@ class _DashboardState extends State<Dashboard> {
           children: [
             IconButton(
               onPressed: () {
-                // Handle icon button 1 press
+                // TODO Handle icon button 1 press
               },
               icon: Image.asset(
                 'assets/Icons/home.png',
@@ -545,7 +499,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data,)),
+                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data, Aadhar_Number: widget.Aadhar_Number,)),
                 );
               },
               icon: Image.asset(
@@ -556,7 +510,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             IconButton(
               onPressed: () {
-                // Handle icon button 4 press
+                // TODO Handle icon button 4 press
               },
               icon: const Icon(Icons.person, color: Colors.white),
             ),

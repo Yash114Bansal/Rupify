@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import '../Home/dashboard.dart';
 
-class login extends StatelessWidget {
+class login extends StatefulWidget {
   login({Key? key}) : super(key: key);
+
+  @override
+  State<login> createState() => _loginState();
+}
+
+class _loginState extends State<login> {
   final TextEditingController _textFieldController = TextEditingController();
+
+  String title = "Continue";
 
   void _navigateToDestinationPage(BuildContext context) {
     String data = _textFieldController.text;
@@ -14,6 +23,16 @@ class login extends StatelessWidget {
         builder: (context) => Dashboard(Aadhar_Number: data),
       ),
     );
+  }
+
+  String? validateAadhar(String? value) {
+    if (value!.isEmpty) {
+      return 'Please enter Aadhar Number';
+    }
+    if (value.length != 12) {
+      return 'Aadhar Number should be 12 digits long';
+    }
+    return null;
   }
 
   @override
@@ -69,26 +88,32 @@ class login extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(11),
                       ),
-                      child: TextField(
+                      child: TextFormField(
+                        onTap: () {
+                          setState(() {
+                            title = "Continue";
+                          });
+                        },
                         controller: _textFieldController,
                         keyboardType: TextInputType.number,
                         maxLength: 12,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                         decoration: InputDecoration(
                           hintText: 'Aadhar Number',
                           hintStyle: TextStyle(
                             color: Colors.black.withOpacity(0.6),
                           ),
-
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10,
                             horizontal: 26,
                           ),
-                          counter: const SizedBox.shrink(), // Remove the character count widget
+                          counter: const SizedBox.shrink(),
                         ),
-                        style: const TextStyle(color: Colors.black,fontSize: 20),
+                        style: const TextStyle(color: Colors.black, fontSize: 20),
+                        validator: validateAadhar,
                       ),
-
                     ),
 
                     const SizedBox(height: 40),
@@ -109,12 +134,11 @@ class login extends StatelessWidget {
                           ),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10,
                             horizontal: 26,
                           ),
-                          counter: const SizedBox.shrink(), // Remove the character count widget
+                          counter: const SizedBox.shrink(),
                         ),
-                        style: const TextStyle(color: Colors.black,fontSize: 20),
+                        style: const TextStyle(color: Colors.black, fontSize: 20),
                       ),
                     ),
                     const SizedBox(height: 60,),
@@ -124,16 +148,25 @@ class login extends StatelessWidget {
                       height: 51,
                       child: ElevatedButton(
                         onPressed: () {
-                          _navigateToDestinationPage(context);
+                          if (_textFieldController.text.length == 12) {
+                            _navigateToDestinationPage(context);
+                          } else {
+                            Vibrate.feedback(FeedbackType.error);
+                            setState(() {
+
+                              _textFieldController.clear();
+                            });
+                          }
                         },
-                        child: const Text(
-                          'CONTINUE',
+                        child: Text(
+                          '$title',
                           style: TextStyle(
                             fontSize: 19,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black, backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(63),

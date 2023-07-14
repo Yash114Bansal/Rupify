@@ -47,8 +47,6 @@ class _QrViewState extends State<QrView> {
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   String Transfer_api = "https://worried-slug-garment.cyclic.app/transfer";
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
   @override
   void reassemble() {
     super.reassemble();
@@ -59,7 +57,6 @@ class _QrViewState extends State<QrView> {
   }
   void _makePayment(String? data) async{
           controller?.pauseCamera();
-          // print(data);
           if(data != null && data.isNotEmpty){
             List<String> list = data
                 .replaceAll('[', '')
@@ -67,52 +64,19 @@ class _QrViewState extends State<QrView> {
                 .split(',')
                 .map((element) => element.trim())
                 .toList();
-            // for(dynamic note in list){
-            //   String realNote = note.split("::")[0];
-            //   final response0 = await http.post(
-            //     Uri.parse(Transfer_api),
-            //     headers: {"Content-Type": "application/json"},
-            //     body: json.encode({"note_code": realNote,"shopkeeper_aadhar":widget.Aadhar_Number}),
-            //   );
-            //   if(response0.statusCode == 406){
-            //     //TODO  Error that user does not have ownership
-            //   }
-            //   else {
-            //     String new_note = json.decode(response0.body)["note"];
-            //     final response_get_value_of_new_note = await http.post(
-            //       Uri.parse(Get_Val_api),
-            //       headers: {"Content-Type": "application/json"},
-            //       body: json.encode({"note": new_note}),
-            //     );
-            //     widget.Note_Data[new_note] =
-            //         int.parse(response_get_value_of_new_note.body);
-            //   }
-            // }
             List<String> Note_Without_Purpose =[];
             for (dynamic note in list){
               Note_Without_Purpose.add(note.split("::")[0]);
               //TODO Purpose Check
             }
-            print(Note_Without_Purpose);
-            print("JJJJJJJJJJSSSSSSSSSSSSSSSSOOOOOOOOOOOOOONNNNNNNNNNNN");
-            print(json.encode({"note_list": Note_Without_Purpose,"shopkeeper_aadhar":widget.Aadhar_Number}));
-            print("JJJJJJJJJJSSSSSSSSSSSSSSSSOOOOOOOOOOOOOONNNNNNNNNNNN");
             final response0 = await http.post(
                 Uri.parse(Transfer_api),
                 headers: {"Content-Type": "application/json"},
                 body: json.encode({"note_list": Note_Without_Purpose,"shopkeeper_aadhar":widget.Aadhar_Number}),
             );
-            print("================================================================");
-            print(response0.body);
-            print(json.decode(response0.body));
-            print(json.decode(response0.body)["notes"]);
-
-            print("================================================================");
             List<dynamic> New_Note_List = json.decode(response0.body)["notes"];
-            print(New_Note_List);
             if(response0.statusCode == 406){
-                  //TODO USer have not ownership of following notes that are in new note list
-              print("Not Autherize");
+                  //TODO User have not ownership of following notes that are in new note list
             }else{
               for(dynamic note in New_Note_List){
                     final response_get_value_of_new_note = await http.post(
@@ -125,27 +89,6 @@ class _QrViewState extends State<QrView> {
                   }
               }
             }
-
-            // for (dynamic note in list) {
-            //   String realNote = note.split("::")[0];
-            //   final response2 = await http.post(
-            //     Uri.parse(Get_Val_api),
-            //     headers: {"Content-Type": "application/json"},
-            //     body: json.encode({"note": realNote}),
-            //   );
-            //
-            //   int responseData = int.parse(response2.body);
-            //   widget.Note_Data[note] = responseData;
-            // }
-
-
-
-
-          //TODO Purpose check
-          // for (String note in list){
-          //
-          // }
-
   }
 
   @override
@@ -242,7 +185,6 @@ class _QrViewState extends State<QrView> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
         ? 150.0
