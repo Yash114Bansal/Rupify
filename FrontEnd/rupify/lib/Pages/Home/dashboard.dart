@@ -109,6 +109,7 @@ class _DashboardState extends State<Dashboard> {
       .replaceAll('"', '')
           .split(',')
           .map((element) => element.trim())
+      .where((element) => element.isEmpty)
           .toList();
       print(list);
       print("++++++++++++_____________++++++++++++++++++++");
