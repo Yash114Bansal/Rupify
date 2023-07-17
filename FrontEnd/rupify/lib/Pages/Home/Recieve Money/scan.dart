@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +42,7 @@ class QrView extends StatefulWidget {
 
 class _QrViewState extends State<QrView> {
   Barcode? result;
+  bool pressed = false;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
@@ -50,13 +50,6 @@ class _QrViewState extends State<QrView> {
   Uint8List bytes = Uint8List(0);
 
   @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    }
-    controller!.resumeCamera();
-  }
 
   Future<void> scanImageFromCamera() async {
     final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -68,6 +61,7 @@ class _QrViewState extends State<QrView> {
 
 
   void _makePayment(String? data) async {
+    controller!.pauseCamera();
     if (data != null && data.isNotEmpty) {
       List<String> list = data.replaceAll('[', '').replaceAll(']', '').split(',').map((element) => element.trim()).toList();
       List<String> Note_Without_Purpose = [];
@@ -91,10 +85,11 @@ class _QrViewState extends State<QrView> {
             body: json.encode({"note": note}),
           );
           widget.Note_Data[note] = int.parse(response_get_value_of_new_note.body);
+          widget.History[note] = int.parse(response_get_value_of_new_note.body);
         }
       }
     }
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   @override
@@ -120,11 +115,14 @@ class _QrViewState extends State<QrView> {
               child: IconButton(
                 iconSize: 30,
                 icon: Icon(
-                  Icons.flash_on,
+                  !pressed?Icons.flash_on:Icons.flash_off,
                   color: Colors.white,
                 ),
                 onPressed: () {
                   controller!.toggleFlash();
+                  setState(() {
+                    pressed = !pressed;
+                  });
                 },
               ),
             ),
