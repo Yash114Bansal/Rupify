@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 class Qr extends StatelessWidget {
   final Map<String, int> Note_Data;
   final String Aadhar_Number;
-  Qr({Key? key, required this.Note_Data, required this.Aadhar_Number}) : super(key: key);
+  final Map<String,int> History;
+  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class Qr extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QrView(Note_Data: Note_Data, Aadhar_Number: Aadhar_Number),
+              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History),
             ));
           },
           child: const Text('qrView'),
@@ -34,8 +35,8 @@ class Qr extends StatelessWidget {
 class QrView extends StatefulWidget {
   final Map<String, int> Note_Data;
   final String Aadhar_Number;
-  const QrView({Key? key, required this.Note_Data, required this.Aadhar_Number}) : super(key: key);
-
+  final Map<String, int> History;
+  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QrViewState();
 }

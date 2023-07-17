@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import '../Recieve Money/scan.dart';
 import 'available_notes.dart';
 // import 'package:rupify/services/balance_statements.dart';
@@ -259,7 +259,7 @@ class _WalletScreenState extends State<WalletScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,)),
+                  MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,History: widget.History)),
                 );
               },
               child: const Text(
