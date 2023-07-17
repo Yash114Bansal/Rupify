@@ -82,7 +82,32 @@ class _QrViewState extends State<QrView> {
       );
       List<dynamic> New_Note_List = json.decode(response0.body)["notes"];
       if (response0.statusCode == 406) {
+        String Data = "";
+        for (dynamic note in New_Note_List) {
+          final response_get_value_of_new_note = await http.post(
+            Uri.parse(Get_Val_api),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"note": note}),
+          );
+          Data += "\n";
+          Data+=response_get_value_of_new_note.body;
+
+
+
+        }
         Navigator.pop(context);
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.ERROR,
+          animType: AnimType.RIGHSLIDE,
+          title: 'Payment Failed',
+          desc: 'User Does Not Have Ownership Of Following Notes:$Data',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+          },
+          btnOkColor: Colors.red,
+
+        )..show();
         //TODO User have not ownership of following notes that are in new note list
       } else {
 
@@ -97,21 +122,21 @@ class _QrViewState extends State<QrView> {
           widget.Note_Data[note] = amt;
           widget.History[note] = amt;
           total_money += amt;
-          Navigator.pop(context);
-          print("showing Dialoge");
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.SUCCES,
-            animType: AnimType.RIGHSLIDE,
-            title: 'Payment Successful',
-            desc: 'Recieved ₹$total_money from NAME',
-            btnOkOnPress: () {
-              Navigator.pop(context);
-            },
-
-          )..show();
-          print("Done Dialogue");
         }
+        Navigator.pop(context);
+        print("showing Dialoge");
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.RIGHSLIDE,
+          title: 'Payment Successful',
+          desc: 'Recieved ₹$total_money from NAME',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+          },
+
+        )..show();
+        print("Done Dialogue");
       }
     }
 
