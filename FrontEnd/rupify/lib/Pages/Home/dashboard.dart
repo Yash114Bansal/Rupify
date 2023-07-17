@@ -85,11 +85,6 @@ class _DashboardState extends State<Dashboard> {
         History[note] = responseData;
       }
 
-      double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
-      setState(() {
-        _balance = sum;
-      });
-
       final response_pending_notes = await http.post(
         Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
         headers: {"Content-Type": "application/json"},
@@ -112,6 +107,10 @@ class _DashboardState extends State<Dashboard> {
           History[note] = -1*responseData;
           Note_Data.remove(note+"::0");
       }
+      double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+      setState(() {
+        _balance = sum;
+      });
       sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
       setState(() {
         _balance = sum;

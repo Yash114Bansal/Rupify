@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -12,7 +12,6 @@ class Qr extends StatelessWidget {
   final String Aadhar_Number;
   final Map<String,int> History;
   Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,170 +36,135 @@ class QrView extends StatefulWidget {
   final String Aadhar_Number;
   final Map<String, int> History;
   const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _QrViewState();
 }
 
 class _QrViewState extends State<QrView> {
   Barcode? result;
+  bool pressed = false;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   String Transfer_api = "https://worried-slug-garment.cyclic.app/transfer";
+  Uint8List bytes = Uint8List(0);
 
   @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
+
+  Future<void> scanImageFromCamera() async {
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      print("File not Picked yet");
     }
-    controller!.resumeCamera();
+
   }
-  void _makePayment(String? data) async{
-          controller?.pauseCamera();
-          if(data != null && data.isNotEmpty){
-            List<String> list = data
-                .replaceAll('[', '')
-                .replaceAll(']', '')
-                .split(',')
-                .map((element) => element.trim())
-                .toList();
-            List<String> Note_Without_Purpose =[];
-            for (dynamic note in list){
-              Note_Without_Purpose.add(note.split("::")[0]);
-              //TODO Purpose Check
-            }
-            final response0 = await http.post(
-                Uri.parse(Transfer_api),
-                headers: {"Content-Type": "application/json"},
-                body: json.encode({"note_list": Note_Without_Purpose,"shopkeeper_aadhar":widget.Aadhar_Number}),
-            );
-            List<dynamic> New_Note_List = json.decode(response0.body)["notes"];
-            if(response0.statusCode == 406){
-                  //TODO User have not ownership of following notes that are in new note list
-            }else{
-              for(dynamic note in New_Note_List){
-                    final response_get_value_of_new_note = await http.post(
-                      Uri.parse(Get_Val_api),
-                      headers: {"Content-Type": "application/json"},
-                      body: json.encode({"note": note}),
-                    );
-                    widget.Note_Data[note] =
-                        int.parse(response_get_value_of_new_note.body);
-                    widget.History[note] = int.parse(response_get_value_of_new_note.body);
-                  }
-              }
-            }
+
+
+  void _makePayment(String? data) async {
+    controller!.pauseCamera();
+    if (data != null && data.isNotEmpty) {
+      List<String> list = data.replaceAll('[', '').replaceAll(']', '').split(',').map((element) => element.trim()).toList();
+      List<String> Note_Without_Purpose = [];
+      for (dynamic note in list) {
+        Note_Without_Purpose.add(note.split("::")[0]);
+        //TODO Purpose Check
+      }
+      final response0 = await http.post(
+        Uri.parse(Transfer_api),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"note_list": Note_Without_Purpose, "shopkeeper_aadhar": widget.Aadhar_Number}),
+      );
+      List<dynamic> New_Note_List = json.decode(response0.body)["notes"];
+      if (response0.statusCode == 406) {
+        //TODO User have not ownership of following notes that are in new note list
+      } else {
+        for (dynamic note in New_Note_List) {
+          final response_get_value_of_new_note = await http.post(
+            Uri.parse(Get_Val_api),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"note": note}),
+          );
+          widget.Note_Data[note] = int.parse(response_get_value_of_new_note.body);
+          widget.History[note] = int.parse(response_get_value_of_new_note.body);
+        }
+      }
+    }
+    // Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Data:')
+      appBar: AppBar(
+        toolbarHeight: 70,
+        title: Text('Scan & Receive'),
+        backgroundColor: Color(0xFF172A48),
+      ),
+      body: Stack(
+        children: [
+          _buildQrView(context),
+          Positioned(
+            bottom: 200.0,
+            left: 120.0,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
 
-                  else
-                    const Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                color: Color(0xFF172A48).withOpacity(0.7),
+              ),
+              child: IconButton(
+                iconSize: 30,
+                icon: Icon(
+                  !pressed?Icons.flash_on:Icons.flash_off,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  controller!.toggleFlash();
+                  setState(() {
+                    pressed = !pressed;
+                  });
+                },
               ),
             ),
-          )
+          ),
+          Positioned(
+            bottom: 200.0,
+            right: 120.0,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFF172A48).withOpacity(0.7),
+              ),
+              child: IconButton(
+                iconSize: 30,
+                icon: Icon(
+                  Icons.image_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () async => await scanImageFromCamera(),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildQrView(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-        MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+    var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 200.0 : 280.0;
+
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
+        borderColor: Colors.white,
+        borderRadius: 10,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: scanArea,
+        overlayColor: Colors.black87,
+        cutOutBottomOffset: 100,
+      ),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
@@ -215,7 +179,6 @@ class _QrViewState extends State<QrView> {
       });
       _makePayment(result!.code);
     });
-
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
