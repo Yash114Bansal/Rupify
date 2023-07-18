@@ -57,9 +57,7 @@ class _QrViewState extends State<QrView> {
     if (pickedImage != null) {
       print("File not Picked yet");
     }
-
   }
-
 
   void _makePayment(String? data) async {
     showDialog(
@@ -91,9 +89,6 @@ class _QrViewState extends State<QrView> {
           );
           Data += "\n";
           Data+=response_get_value_of_new_note.body;
-
-
-
         }
         Navigator.pop(context);
         AwesomeDialog(
@@ -119,6 +114,7 @@ class _QrViewState extends State<QrView> {
             body: json.encode({"note": note}),
           );
           int amt = int.parse(response_get_value_of_new_note.body);
+          note = note+"::0";
           widget.Note_Data[note] = amt;
           widget.History[note] = amt;
           total_money += amt;
@@ -139,9 +135,6 @@ class _QrViewState extends State<QrView> {
         print("Done Dialogue");
       }
     }
-
-
-
   }
 
   @override
