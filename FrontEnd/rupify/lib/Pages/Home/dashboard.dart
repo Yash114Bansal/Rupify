@@ -57,7 +57,16 @@ class _DashboardState extends State<Dashboard> {
       },
     );
   }
-
+  void updateEverything(){
+    double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+    setState(() {
+      _balance = sum;
+    });
+    sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+    setState(() {
+      _balance = sum;
+    });
+  }
   void _fetchData(String aadharNumber) async {
     showDialog(
       context: context,
@@ -107,14 +116,7 @@ class _DashboardState extends State<Dashboard> {
           History[note] = -1*responseData;
           Note_Data.remove(note+"::0");
       }
-      double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
-      setState(() {
-        _balance = sum;
-      });
-      sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
-      setState(() {
-        _balance = sum;
-      });
+      updateEverything();
       Navigator.pop(context);
       await _showSuccessDialog();
     }
@@ -221,7 +223,7 @@ class _DashboardState extends State<Dashboard> {
                             context,
                             MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
                           );
-                          _fetchData(widget.Aadhar_Number);
+                          updateEverything();
                         },
                         child: Column(
                           children: [
@@ -248,7 +250,7 @@ class _DashboardState extends State<Dashboard> {
                           context,
                           MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
                         );
-                        _fetchData(widget.Aadhar_Number);
+                        updateEverything();
                       },
                       child: Column(
                         children: [
@@ -461,7 +463,7 @@ class _DashboardState extends State<Dashboard> {
             context,
             MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
           );
-          _fetchData(widget.Aadhar_Number);
+          updateEverything();
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
       ),

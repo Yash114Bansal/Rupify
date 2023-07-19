@@ -186,9 +186,12 @@ class _SendScreenState extends State<SendScreen> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               // Handle back button press
-              _timer.cancel();
-              Navigator.of(context).pop();
-
+              try{
+                _timer.cancel();
+                Navigator.of(context).pop();
+              }catch (e) {
+                Navigator.of(context).pop();
+              }
             },
           ),
           title: const Text(
