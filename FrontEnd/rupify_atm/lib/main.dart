@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String noteNumber = '';
   bool isLoading = false;
   String govt_api = "https://funny-bull-bathing-suit.cyclic.app/putval";
-  String rupify_api = "https://worried-slug-garment.cyclic.app/deposite";
+  String rupify_api = "https://drab-jade-duckling-cape.cyclic.app/deposite";
   String generateRandomString(int length) {
     final random = Random();
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

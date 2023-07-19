@@ -21,7 +21,7 @@ class _SendScreenState extends State<SendScreen> {
   double _amount = 0;
   String qrData = '';
   late Timer _timer;
-  String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
+  String Pending_Note_api = "https://drab-jade-duckling-cape.cyclic.app/get_pending_note";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   @override
   void initState() {

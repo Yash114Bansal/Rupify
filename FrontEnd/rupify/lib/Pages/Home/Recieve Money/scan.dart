@@ -47,7 +47,7 @@ class _QrViewState extends State<QrView> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
-  String Transfer_api = "https://worried-slug-garment.cyclic.app/transfer";
+  String Transfer_api = "https://drab-jade-duckling-cape.cyclic.app/transfer";
   Uint8List bytes = Uint8List(0);
 
   @override

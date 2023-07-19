@@ -22,9 +22,9 @@ class _DashboardState extends State<Dashboard> {
   double _balance = 0;
   Map<String, int> Note_Data = {};
   Map<String, int> History = {};
-  String Rupify_api = "https://worried-slug-garment.cyclic.app/get_money";
+  String Rupify_api = "https://drab-jade-duckling-cape.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
-  String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
+  String Pending_Note_api = "https://drab-jade-duckling-cape.cyclic.app/get_pending_note";
   @override
   void initState() {
     super.initState();
