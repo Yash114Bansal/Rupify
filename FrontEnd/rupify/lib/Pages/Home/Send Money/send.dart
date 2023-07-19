@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 class SendScreen extends StatefulWidget {
   final Map<String, int> Note_Data;
-  SendScreen({required this.Note_Data});
+  final String Aadhar_Number;
+  final Map<String, int> History;
+  SendScreen({required this.Note_Data,required this.Aadhar_Number,required this.History});
   @override
   _SendScreenState createState() => _SendScreenState();
 }
@@ -12,13 +20,64 @@ class _SendScreenState extends State<SendScreen> {
   double _balance = 0;
   double _amount = 0;
   String qrData = '';
-
+  late Timer _timer;
+  String Pending_Note_api = "https://worried-slug-garment.cyclic.app/get_pending_note";
+  String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   @override
   void initState() {
     super.initState();
     for (var value in widget.Note_Data.values) {
       _balance += value;
     }
+  }
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancel the timer to stop it
+    super.dispose();
+  }
+  void _startTimer() {
+    const duration = Duration(seconds: 5);
+    _timer = Timer.periodic(duration, (_) async {
+      // TODO: Send request to the API here
+      print('Sending request to the API...');
+      final response_pending_notes = await http.post(
+        Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
+        headers: {"Content-Type": "application/json"},
+      );
+      List<String> list = response_pending_notes.body
+          .replaceAll('[', '')
+          .replaceAll(']', '')
+          .replaceAll('"', '')
+          .split(',')
+          .map((element) => element.trim())
+          .where((element) => element.isNotEmpty)
+          .toList();
+      print("-------------------");
+      print(list);
+      if(list.length>0){
+        for(dynamic note in list){
+          final response2 = await http.post(
+            Uri.parse(Get_Val_api),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"note": note}),
+          );
+          int responseData = int.parse(response2.body);
+          widget.History[note] = -1*responseData;
+          widget.Note_Data.remove(note+"::0");
+        }
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.RIGHSLIDE,
+          title: 'Payment Successful',
+          desc: 'Sent Money',
+          btnOkOnPress: () {
+            Navigator.pop(context);
+          },
+
+        )..show();
+      }
+    });
   }
   List<String>? getCurrencyNotes(Map<String, int> currencyDict, double p) {
     List<String> notes = currencyDict.keys.toList();
@@ -40,7 +99,7 @@ class _SendScreenState extends State<SendScreen> {
     }
   }
 
-  void _sendMoney() {
+  void _sendMoney() async{
     if (_amount > _balance) {
       showDialog(
         context: context,
@@ -103,6 +162,11 @@ class _SendScreenState extends State<SendScreen> {
         setState(() {
           qrData = '$working_notes';
         });
+        bool result = await InternetConnectionChecker().hasConnection;
+        if(result){
+          _startTimer();
+        }
+
       }
     }
   }
@@ -122,7 +186,12 @@ class _SendScreenState extends State<SendScreen> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               // Handle back button press
-              Navigator.of(context).pop();
+              try{
+                _timer.cancel();
+                Navigator.of(context).pop();
+              }catch (e) {
+                Navigator.of(context).pop();
+              }
             },
           ),
           title: const Text(
