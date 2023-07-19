@@ -192,7 +192,7 @@ class _DashboardState extends State<Dashboard> {
                       Text(
                         '$_balance',
                         style: const TextStyle(
-                          fontSize: 45,
+                          fontSize: 43,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -216,11 +216,12 @@ class _DashboardState extends State<Dashboard> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async{
+                          await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data)),
+                            MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
                           );
+                          _fetchData(widget.Aadhar_Number);
                         },
                         child: Column(
                           children: [
@@ -242,11 +243,12 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async{
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
                         );
+                        _fetchData(widget.Aadhar_Number);
                       },
                       child: Column(
                         children: [
@@ -454,11 +456,12 @@ class _DashboardState extends State<Dashboard> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF172A48),
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async{
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
           );
+          _fetchData(widget.Aadhar_Number);
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
       ),
