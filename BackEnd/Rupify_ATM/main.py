@@ -16,7 +16,7 @@ root.maxsize(800, 900)
 # govt_api = "http://127.0.0.1:8000/putval" # For Debugging
 # rupify_api = "https://rupify-production.up.railway.app/deposite"
 govt_api = "https://funny-bull-bathing-suit.cyclic.app/putval"
-rupify_api = "https://worried-slug-garment.cyclic.app/deposite"
+rupify_api = "https://drab-jade-duckling-cape.cyclic.app/deposite"
 
 def send_request():
     note_number = entry1.get()
