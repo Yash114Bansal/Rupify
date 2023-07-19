@@ -109,6 +109,9 @@ def get_money(shopkeeper: shopkeeper):
     for notes in shopkeeper.note_list:
         sender_aadhar, note_number = decrypt_message(
             key, notes.encode()).split("::")
+        if sender_aadhar == shopkeeper.shopkeeper_aadhar:
+            return HTMLResponse(content="Transfer to self not allowed", status_code=409)
+        
         if (not total_data.get(sender_aadhar)):
             total_data[sender_aadhar] = []
 
