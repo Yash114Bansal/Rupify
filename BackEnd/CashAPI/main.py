@@ -122,13 +122,19 @@ Temporary_Users_Data = {
     
 }
 
-@app.post("/get_name")
-async def get_name(n:cash_note):
+@app.post("/get_name_by_note")
+async def get_name_by_note(n:cash_note):
     aadhar = decrypt_message(key,n.note.encode())
     aadhar = aadhar.split("::")[0].strip()
     print(aadhar)
     if(Temporary_Users_Data.get(aadhar)):
-        return JSONResponse(content=Temporary_Users_Data.get(aadhar))
+        return JSONResponse(content={"Name" :Temporary_Users_Data[aadhar]["Name"],"pfp":Temporary_Users_Data[aadhar]["Profile Pic"]})
+    return HTMLResponse(content="Unknown",status_code=404)
+
+@app.post("/get_detailes")
+async def get_details_by_aadhar(aadhar:aadhar):
+    if(Temporary_Users_Data.get(aadhar.aadhar)):
+        return JSONResponse(content=Temporary_Users_Data.get(aadhar.aadhar))
     return HTMLResponse(content="Unknown",status_code=404)
 
 # Not Tested
