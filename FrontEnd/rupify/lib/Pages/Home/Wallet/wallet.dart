@@ -257,10 +257,11 @@ class _WalletScreenState extends State<WalletScreen> {
                 elevation: 5,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,History: widget.History)),
-                );
+                // TODO
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,History: widget.History)),
+                // );
               },
               child: const Text(
                 'Make Payment',
