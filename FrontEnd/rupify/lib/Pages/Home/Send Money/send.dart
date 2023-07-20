@@ -63,7 +63,11 @@ class _SendScreenState extends State<SendScreen> {
           );
           int responseData = int.parse(response2.body);
           widget.History[note] = -1*responseData;
-          widget.Note_Data.remove(note+"::0");
+          // widget.Note_Data.remove(note+"::0");
+          widget.Note_Data.removeWhere((data, index) {
+            List<String> parts = data.split("::");
+            return parts.length > 1 && parts[0] == note;
+          });
         }
         AwesomeDialog(
           context: context,
