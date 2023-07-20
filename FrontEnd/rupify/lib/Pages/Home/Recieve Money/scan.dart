@@ -12,7 +12,8 @@ class Qr extends StatelessWidget {
   final Map<String, int> Note_Data;
   final String Aadhar_Number;
   final Map<String,int> History;
-  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
+  final Map<String,dynamic> user_data;
+  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class Qr extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History),
+              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History,user_data:user_data ,),
             ));
           },
           child: const Text('qrView'),
@@ -36,7 +37,8 @@ class QrView extends StatefulWidget {
   final Map<String, int> Note_Data;
   final String Aadhar_Number;
   final Map<String, int> History;
-  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History}) : super(key: key);
+  final Map<String,dynamic> user_data;
+  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QrViewState();
 }
@@ -69,9 +71,31 @@ class _QrViewState extends State<QrView> {
     if (data != null && data.isNotEmpty) {
       List<String> list = data.replaceAll('[', '').replaceAll(']', '').split(',').map((element) => element.trim()).toList();
       List<String> Note_Without_Purpose = [];
+      List<int> Purpose_of_Each_Note = [];
       for (dynamic note in list) {
         Note_Without_Purpose.add(note.split("::")[0]);
+        Purpose_of_Each_Note.add(int.parse(note.split("::")[1]));
         //TODO Purpose Check
+      }
+      for(int purpose in Purpose_of_Each_Note){
+        if(widget.user_data["purpose"].contains(purpose)){
+          //Pass
+        }else{
+          Navigator.pop(context);
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.RIGHSLIDE,
+            title: 'Payment Failed',
+            desc: 'You Dont Have Permission to Scan this Specific Purpose of $purpose',
+            btnOkOnPress: () {
+              Navigator.pop(context);
+            },
+            btnOkColor: Colors.red,
+
+          )..show();
+          return;
+        }
       }
       final response0 = await http.post(
         Uri.parse(Transfer_api),

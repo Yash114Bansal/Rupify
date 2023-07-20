@@ -11,7 +11,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class Dashboard extends StatefulWidget {
   final String Aadhar_Number;
-  const Dashboard({super.key, required this.Aadhar_Number});
+  final Map<String,dynamic> user_data;
+  const Dashboard({super.key, required this.Aadhar_Number,required this.user_data});
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -114,7 +115,11 @@ class _DashboardState extends State<Dashboard> {
           );
           int responseData = int.parse(response2.body);
           History[note] = -1*responseData;
-          Note_Data.remove(note+"::0");
+          // Note_Data.remove(note+"::0");
+        Note_Data.removeWhere((data, index) {
+          List<String> parts = data.split("::");
+          return parts.length > 1 && parts[0] == note;
+        });
       }
       updateEverything();
       Navigator.pop(context);
@@ -158,8 +163,9 @@ class _DashboardState extends State<Dashboard> {
                     // TODO :Handle icon button 1 press
                   },
                   iconSize: 40,
-                  icon: Image.asset(
-                    'assets/Icons/profile.png',
+                  icon: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(widget.user_data["Profile Pic"]),
                   ),
                 ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.65),
@@ -248,7 +254,7 @@ class _DashboardState extends State<Dashboard> {
                       onTap: () async{
                         await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
+                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
                         );
                         updateEverything();
                       },
@@ -461,7 +467,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () async{
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
           );
           updateEverything();
         },
