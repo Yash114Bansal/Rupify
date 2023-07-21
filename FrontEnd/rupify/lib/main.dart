@@ -7,6 +7,7 @@ void main(){
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   return runApp(MaterialApp(
     theme: ThemeData(
+      fontFamily: 'Outfit',
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
           color: Colors.blue
