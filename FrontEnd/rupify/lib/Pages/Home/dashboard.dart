@@ -20,6 +20,16 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
+  Map<String,String> dashBoardIcons = {
+    'assets/Icons/Internet.png':'WIFI',
+    'assets/Icons/Electricity.png':'Electricity',
+    'assets/Icons/Fast_Tag.png':'Fast Tag',
+    'assets/Icons/Metro.png':'Metro',
+    'assets/Icons/Recharge.png':'Recharge',
+    'assets/Icons/Income_Tax.png':'Income Tax',
+    'assets/Icons/Gas.png':'Gas',
+    'assets/Icons/More.png':'More',
+  };
   double _balance = 0;
   Map<String, int> Note_Data = {};
   Map<String, int> History = {};
@@ -142,6 +152,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    List<MapEntry<String, String>> entries = dashBoardIcons.entries.toList();
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -305,7 +316,7 @@ class _DashboardState extends State<Dashboard> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
              Padding(
               padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.20),
-              child: Text(
+              child: const Text(
                 'Payment List',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -315,98 +326,42 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Spacer(),
-                InkWell(
-                  onTap: () => {},
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/Icons/internet.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Internet',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
                   ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
-                InkWell(
-                  onTap: () => {},
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/Icons/electricity.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Electricity',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                  itemCount: 8,
+                  itemBuilder: (context, index) {
+                    String key = entries[index].key;
+                    String value = entries[index].value;
+                    return Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+
+                          },
+                          child: Image.asset(
+                            key,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
-                InkWell(
-                  onTap: () => {},
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/Icons/merchant.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'Merchant',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+                        Text(
+                          value,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
-                SizedBox(width: MediaQuery.of(context).size.height * 0.035),
-                InkWell(
-                  onTap: () => {},
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/Icons/more.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        'More',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-              ],
+              ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Padding(
               padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.27),
               child: const Text(
