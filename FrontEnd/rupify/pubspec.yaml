@@ -91,7 +91,7 @@ flutter:
   fonts:
      - family: Outfit
        fonts:
-         - asset: assets/Fonts/Outfit_variable_font.ttf
+         - asset: assets/Fonts/Outfit.ttf
 
   #
   # For details regarding fonts from package dependencies,

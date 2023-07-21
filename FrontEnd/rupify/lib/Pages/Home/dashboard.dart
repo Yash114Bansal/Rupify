@@ -208,9 +208,9 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '$_balance',
+                        '₹ ${_balance.toInt()}',
                         style: const TextStyle(
-                          fontSize: 43,
+                          fontSize: 40,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
