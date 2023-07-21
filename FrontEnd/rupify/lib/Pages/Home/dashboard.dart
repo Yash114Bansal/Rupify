@@ -210,7 +210,7 @@ class _DashboardState extends State<Dashboard> {
                       Text(
                         '₹ ${_balance.toInt()}',
                         style: const TextStyle(
-                          fontSize: 40,
+                          fontSize: 35,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -342,10 +342,15 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         InkWell(
                           onTap: () {
-
+                            // Add your onTap logic here
                           },
-                          child: Image.asset(
-                            key,
+                          child: SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: Image.asset(
+                              key,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.002),
@@ -360,6 +365,7 @@ class _DashboardState extends State<Dashboard> {
                     );
                   },
                 ),
+
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
