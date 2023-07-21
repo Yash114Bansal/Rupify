@@ -125,7 +125,6 @@ class _DashboardState extends State<Dashboard> {
           );
           int responseData = int.parse(response2.body);
           History[note] = -1*responseData;
-          // Note_Data.remove(note+"::0");
         Note_Data.removeWhere((data, index) {
           List<String> parts = data.split("::");
           return parts.length > 1 && parts[0] == note;
@@ -165,7 +164,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         child: Column(
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height * 0.030),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.025),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -192,7 +191,7 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.112,
+              height: MediaQuery.of(context).size.height * 0.113,
               child: Card(
                 color: Colors.transparent,
                 elevation: 0,
@@ -326,10 +325,12 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const SizedBox(height: 10),
-            Expanded(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.2,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: GridView.builder(
+                  physics: ClampingScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
@@ -378,6 +379,7 @@ class _DashboardState extends State<Dashboard> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: GridView.builder(
+                  physics: ClampingScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
