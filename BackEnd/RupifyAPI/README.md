@@ -1,2 +1,2 @@
 # CashAPI
-## deployed on https://worried-slug-garment.cyclic.app
+## deployed on https://drab-jade-duckling-cape.cyclic.app/docs
