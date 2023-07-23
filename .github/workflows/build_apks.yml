@@ -1,0 +1,42 @@
+name: Build APKs
+
+on:
+  push:
+    branches:
+      - main
+      - development
+
+jobs:
+  build_apks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.10.5
+
+      - name: Build Rupify APK
+        run: |
+          cd FrontEnd/rupify
+          flutter clean
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk Rupify.apk
+
+      - name: Build RupifyATM APK
+        run: |
+          cd FrontEnd/rupify_atm
+          flutter clean
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk RupifyATM.apk
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v2
+        with:
+          name: apks
+          path: |
+            FrontEnd/rupify/Rupify.apk
+            FrontEnd/rupify_atm/RupifyATM.apk
