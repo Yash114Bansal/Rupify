@@ -6,6 +6,7 @@ import 'package:rupify/Pages/Home/Wallet/wallet.dart';
 import 'package:rupify/Pages/Home/Contacts/contacts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:rupify/Services/contact.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 
@@ -19,7 +20,16 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
+  final Map<String,People> _people = {
+    '111111111111': People(name: "Muskan", profilePic: "https://drive.google.com/uc?export=download&id=1no3PBWeBNKmt9uf3-u0s4-a0zWdmY1BY", mobileNumber: "9999999990", purposes: [0], transactions: []),
+    '111111111112': People(name: "Paras Upadhayay", profilePic: "https://drive.google.com/uc?export=download&id=15DfPsiWNuTGXF28eKjTuhoqt0P5j1Axw", mobileNumber: "9999999991", purposes: [0], transactions: []),
+    '111111111113': People(name: "Khushi", profilePic: "https://drive.google.com/uc?export=download&id=13OKt98UD5fVDIlYQofrzU_VsjwUTfdI1", mobileNumber: "9999999993", purposes: [0], transactions: []),
+    '111111111114': People(name: "Pushkar", profilePic: "https://drive.google.com/uc?export=download&id=1yaZP6H5kpBAokDgxwu0wb3RqR4tYtIpJ", mobileNumber: "9999999994", purposes: [0, 10], transactions: []),
+    '111111111115': People(name: "Shreya", profilePic: "https://drive.google.com/uc?export=download&id=1ct_WwQ4odGbJAsOANmVBQ4n_nhD5O27r", mobileNumber: "9999999995", purposes: [0], transactions: []),
+    '111111111116': People(name: "Nitin", profilePic: "https://drive.google.com/uc?export=download&id=1KoHx8yl7PAyr-sAmzQUzJZqZZgVe88El", mobileNumber: "9999999996", purposes: [0, 15], transactions: []),
+    '222222222222': People(name: "Ramu", profilePic: "https://drive.google.com/uc?export=download&id=1tKDo5N7AWYP73dNzTx5mvpy8BsWloD8T", mobileNumber: "9999999997", purposes: [0, 15], transactions: []),
+    '989898989898': People(name: "Dhruval Gupta", profilePic: "https://drive.google.com/uc?export=download&id=1SQg3fn5j8Z6RSCe1BArZu07eQLrftgM-", mobileNumber: "9999999992", purposes: [0], transactions: []),
+  };
   Map<String,String> dashBoardIcons = {
     'assets/Icons/Internet.png':'WIFI',
     'assets/Icons/Electricity.png':'Electricity',
@@ -105,11 +115,11 @@ class _DashboardState extends State<Dashboard> {
         History[note] = responseData;
       }
 
-      final response_pending_notes = await http.post(
+      final responsePendingNotes = await http.post(
         Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
         headers: {"Content-Type": "application/json"},
       );
-      List<String> list = response_pending_notes.body
+      List<String> list = responsePendingNotes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
           .replaceAll('"', '')
@@ -125,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
           );
           int responseData = int.parse(response2.body);
           History[note] = -1*responseData;
-        Note_Data.removeWhere((data, index) {
+          Note_Data.removeWhere((data, index) {
           List<String> parts = data.split("::");
           return parts.length > 1 && parts[0] == note;
         });
@@ -151,6 +161,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    List<People> Contacts = _people.values.toList();
     List<MapEntry<String, String>> entries = dashBoardIcons.entries.toList();
     return Scaffold(
       body: Container(
@@ -264,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
                       onTap: () async{
                         await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
+                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data, people: _people,)),
                         );
                         updateEverything();
                       },
@@ -385,7 +396,7 @@ class _DashboardState extends State<Dashboard> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: GridView.builder(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
@@ -395,22 +406,16 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Contacts1(data: Contacts[index])));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Person(person: Contacts[index])));
                           },
                           child: CircleAvatar(
                             radius: 27,
-                            backgroundColor: (index%2 == 0)?Colors.blue:Colors.blueAccent,
-                            child: Text(
-                              Contacts[index][0],
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
+                            backgroundImage: NetworkImage(Contacts[index].profilePic),
                           ),
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.002),
                         Text(
-                          Contacts[index],
+                          Contacts[index].name,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -430,7 +435,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () async{
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
+            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data, people: _people,)),
           );
           updateEverything();
         },
@@ -459,7 +464,7 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => transactions()),
+                  MaterialPageRoute(builder: (context) => Placeholder()), //TODO check it out once
                 );
               },
               icon: Image.asset(

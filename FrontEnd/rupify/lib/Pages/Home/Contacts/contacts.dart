@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:rupify/Services/contact.dart';
 
-class Contacts1 extends StatelessWidget {
-   Contacts1({Key? key,required this.data}) : super(key: key);
-   final String data;
+class Person extends StatefulWidget {
+   const Person({Key? key,required this.person}) : super(key: key);
+   final People person;
 
+  @override
+  State<Person> createState() => _PersonState();
+}
+
+class _PersonState extends State<Person> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Color(0xFF172A48),
-        centerTitle: true,
         title: Text(
-          data,
+          widget.person.name,
         ),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/Background/history.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+      body: ListView.builder(
+        itemCount: widget.person.transactions.length ,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            height: 200,
+            width: 200,
+            alignment: (widget.person.transactions[index].sent)?Alignment.centerRight:Alignment.centerLeft,
+            child: const  Card(
+              color: Colors.black,
+            ),
+          );
+        },
       ),
     );
   }

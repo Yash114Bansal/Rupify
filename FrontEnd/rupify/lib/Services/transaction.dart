@@ -3,5 +3,6 @@ class Transaction{
   String date;
   String amount;
   String time;
-  Transaction({required this.name,required this.date,required this.amount,required this.time});
+  bool sent;
+  Transaction({required this.name,required this.amount,required this.date,required this.time, required this.sent});
 }

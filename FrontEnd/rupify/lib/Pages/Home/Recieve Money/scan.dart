@@ -7,23 +7,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
+import '../../../Services/contact.dart';
 
 class Qr extends StatelessWidget {
   final Map<String, int> Note_Data;
   final String Aadhar_Number;
   final Map<String,int> History;
   final Map<String,dynamic> user_data;
-  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
+  final Map<String, People> people;
+  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data,required this.people}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Demo Home Page')),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History,user_data:user_data ,),
+              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History,user_data:user_data, people: people ,),
             ));
           },
           child: const Text('qrView'),
@@ -38,7 +39,8 @@ class QrView extends StatefulWidget {
   final String Aadhar_Number;
   final Map<String, int> History;
   final Map<String,dynamic> user_data;
-  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
+  final Map<String, People> people;
+  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data,required this.people}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QrViewState();
 }
