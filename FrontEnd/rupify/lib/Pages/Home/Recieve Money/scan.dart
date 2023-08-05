@@ -97,11 +97,20 @@ class _QrViewState extends State<QrView> {
           return;
         }
       }
+      String Name = "Unknown";
       final response0 = await http.post(
         Uri.parse(Transfer_api),
         headers: {"Content-Type": "application/json"},
         body: json.encode({"note_list": Note_Without_Purpose, "shopkeeper_aadhar": widget.Aadhar_Number}),
       );
+      final response11 = await http.post(
+        Uri.parse("https://funny-bull-bathing-suit.cyclic.app/get_name_by_note"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"note": Note_Without_Purpose[0]}),
+      );
+      if(response11.statusCode == 200){
+        Name = json.decode(response11.body)["Name"];
+      }
       List<dynamic> New_Note_List = json.decode(response0.body)["notes"];
       if (response0.statusCode == 406) {
         String Data = "";
@@ -150,7 +159,7 @@ class _QrViewState extends State<QrView> {
           dialogType: DialogType.SUCCES,
           animType: AnimType.RIGHSLIDE,
           title: 'Payment Successful',
-          desc: 'Recieved ₹$total_money from NAME',
+          desc: 'Recieved ₹$total_money from $Name',
           btnOkOnPress: () {
             Navigator.pop(context);
           },
