@@ -49,7 +49,7 @@ class _loginState extends State<login> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Dashboard(Aadhar_Number: data,user_data: user_details,),
+          builder: (context) => Dashboard(aadharNumber: data,userData: user_details,),
         ),
       );
       Navigator.pop(context);

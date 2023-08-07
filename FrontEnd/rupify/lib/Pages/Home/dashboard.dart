@@ -8,38 +8,47 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-
 class Dashboard extends StatefulWidget {
-  final String Aadhar_Number;
-  final Map<String,dynamic> user_data;
-  const Dashboard({super.key, required this.Aadhar_Number,required this.user_data});
+  final String aadharNumber;
+  final Map<String, dynamic> userData;
+  const Dashboard(
+      {super.key, required this.aadharNumber, required this.userData});
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  List<String> Contacts = ["Paras","Pushkar","Yash","Manas","Kartik","Dhruval","Lakshya","Sankalp"];
-  Map<String,String> dashBoardIcons = {
-    'assets/Icons/Internet.png':'WIFI',
-    'assets/Icons/Electricity.png':'Electricity',
-    'assets/Icons/Fast_Tag.png':'Fast Tag',
-    'assets/Icons/Metro.png':'Metro',
-    'assets/Icons/Recharge.png':'Recharge',
-    'assets/Icons/Income_Tax.png':'Income Tax',
-    'assets/Icons/Gas.png':'Gas',
-    'assets/Icons/More.png':'More',
+  List<String> Contacts = [
+    "Paras",
+    "Pushkar",
+    "Yash",
+    "Manas",
+    "Kartik",
+    "Dhruval",
+    "Lakshya",
+    "Sankalp"
+  ];
+  Map<String, String> dashBoardIcons = {
+    'assets/Icons/Internet.png': 'WIFI',
+    'assets/Icons/Electricity.png': 'Electricity',
+    'assets/Icons/Fast_Tag.png': 'Fast Tag',
+    'assets/Icons/Metro.png': 'Metro',
+    'assets/Icons/Recharge.png': 'Recharge',
+    'assets/Icons/Income_Tax.png': 'Income Tax',
+    'assets/Icons/Gas.png': 'Gas',
+    'assets/Icons/More.png': 'More',
   };
   double _balance = 0;
   Map<String, int> Note_Data = {};
   Map<String, int> History = {};
   String Rupify_api = "https://drab-jade-duckling-cape.cyclic.app/get_money";
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
-  String Pending_Note_api = "https://drab-jade-duckling-cape.cyclic.app/get_pending_note";
+  String Pending_Note_api =
+      "https://drab-jade-duckling-cape.cyclic.app/get_pending_note";
   @override
   void initState() {
     super.initState();
-
   }
 
   Future<void> _showSuccessDialog() async {
@@ -68,16 +77,20 @@ class _DashboardState extends State<Dashboard> {
       },
     );
   }
-  void updateEverything(){
-    double sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+
+  void updateEverything() {
+    double sum = Note_Data.values
+        .fold(0, (previousValue, element) => previousValue + element);
     setState(() {
       _balance = sum;
     });
-    sum = Note_Data.values.fold(0, (previousValue, element) => previousValue + element);
+    sum = Note_Data.values
+        .fold(0, (previousValue, element) => previousValue + element);
     setState(() {
       _balance = sum;
     });
   }
+
   void _fetchData(String aadharNumber) async {
     showDialog(
       context: context,
@@ -105,11 +118,11 @@ class _DashboardState extends State<Dashboard> {
         History[note] = responseData;
       }
 
-      final response_pending_notes = await http.post(
-        Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
+      final responsePendingNotes = await http.post(
+        Uri.parse('$Pending_Note_api?aadhar=${widget.aadharNumber}'),
         headers: {"Content-Type": "application/json"},
       );
-      List<String> list = response_pending_notes.body
+      List<String> list = responsePendingNotes.body
           .replaceAll('[', '')
           .replaceAll(']', '')
           .replaceAll('"', '')
@@ -117,14 +130,14 @@ class _DashboardState extends State<Dashboard> {
           .map((element) => element.trim())
           .where((element) => element.isNotEmpty)
           .toList();
-      for(dynamic note in list){
-          final response2 = await http.post(
-            Uri.parse(Get_Val_api),
-            headers: {"Content-Type": "application/json"},
-            body: json.encode({"note": note}),
-          );
-          int responseData = int.parse(response2.body);
-          History[note] = -1*responseData;
+      for (dynamic note in list) {
+        final response2 = await http.post(
+          Uri.parse(Get_Val_api),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"note": note}),
+        );
+        int responseData = int.parse(response2.body);
+        History[note] = -1 * responseData;
         Note_Data.removeWhere((data, index) {
           List<String> parts = data.split("::");
           return parts.length > 1 && parts[0] == note;
@@ -133,9 +146,7 @@ class _DashboardState extends State<Dashboard> {
       updateEverything();
       Navigator.pop(context);
       await _showSuccessDialog();
-    }
-
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Not connected to the internet.'),
@@ -146,8 +157,6 @@ class _DashboardState extends State<Dashboard> {
       return;
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +184,8 @@ class _DashboardState extends State<Dashboard> {
                   iconSize: 40,
                   icon: CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage(widget.user_data["Profile Pic"]),
+                    backgroundImage:
+                        NetworkImage(widget.userData["Profile Pic"]),
                   ),
                 ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.65),
@@ -222,7 +232,8 @@ class _DashboardState extends State<Dashboard> {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.005),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.05),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.height * 0.05),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
@@ -234,10 +245,15 @@ class _DashboardState extends State<Dashboard> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        onTap: () async{
+                        onTap: () async {
                           await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => SendScreen(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,)),
+                            MaterialPageRoute(
+                                builder: (context) => SendScreen(
+                                      Note_Data: Note_Data,
+                                      Aadhar_Number: widget.aadharNumber,
+                                      History: History,
+                                    )),
                           );
                           updateEverything();
                         },
@@ -261,10 +277,16 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     InkWell(
-                      onTap: () async{
+                      onTap: () async {
                         await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
+                          MaterialPageRoute(
+                              builder: (context) => QrView(
+                                    Note_Data: Note_Data,
+                                    Aadhar_Number: widget.aadharNumber,
+                                    History: History,
+                                    user_data: widget.userData,
+                                  )),
                         );
                         updateEverything();
                       },
@@ -288,7 +310,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     InkWell(
                       onTap: () {
-                        _fetchData(widget.Aadhar_Number);
+                        _fetchData(widget.aadharNumber);
                       },
                       child: Column(
                         children: [
@@ -313,8 +335,9 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-             Padding(
-              padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.20),
+            Padding(
+              padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.height * 0.20),
               child: const Text(
                 'Payment List',
                 style: TextStyle(
@@ -353,7 +376,8 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.002),
                         Text(
                           value,
                           style: const TextStyle(
@@ -365,12 +389,12 @@ class _DashboardState extends State<Dashboard> {
                     );
                   },
                 ),
-
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Padding(
-              padding: EdgeInsets.only(right: MediaQuery.of(context).size.height * 0.27),
+              padding: EdgeInsets.only(
+                  right: MediaQuery.of(context).size.height * 0.27),
               child: const Text(
                 'People',
                 style: TextStyle(
@@ -395,11 +419,17 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Contacts1(data: Contacts[index])));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Contacts1(data: Contacts[index])));
                           },
                           child: CircleAvatar(
                             radius: 27,
-                            backgroundColor: (index%2 == 0)?Colors.blue:Colors.blueAccent,
+                            backgroundColor: (index % 2 == 0)
+                                ? Colors.blue
+                                : Colors.blueAccent,
                             child: Text(
                               Contacts[index][0],
                               style: const TextStyle(
@@ -408,7 +438,8 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ),
                         ),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.002),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.002),
                         Text(
                           Contacts[index],
                           style: const TextStyle(
@@ -427,10 +458,16 @@ class _DashboardState extends State<Dashboard> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF172A48),
-        onPressed: () async{
+        onPressed: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: widget.Aadhar_Number,History: History,user_data: widget.user_data,)),
+            MaterialPageRoute(
+                builder: (context) => QrView(
+                      Note_Data: Note_Data,
+                      Aadhar_Number: widget.aadharNumber,
+                      History: History,
+                      user_data: widget.userData,
+                    )),
           );
           updateEverything();
         },
@@ -473,7 +510,13 @@ class _DashboardState extends State<Dashboard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => WalletScreen(History: History, Amount: _balance, Note_Data: Note_Data, Aadhar_Number: widget.Aadhar_Number,)),
+                  MaterialPageRoute(
+                      builder: (context) => WalletScreen(
+                            History: History,
+                            Amount: _balance,
+                            Note_Data: Note_Data,
+                            Aadhar_Number: widget.aadharNumber,
+                          )),
                 );
               },
               icon: Image.asset(
