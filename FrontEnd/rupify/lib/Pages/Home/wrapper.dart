@@ -24,6 +24,7 @@ class _DashboardState extends State<Dashboard> {
 
     List<Widget> pages = [HomeScreen(user: widget.user),Transactions(),WalletScreen(user: widget.user),ProfilePage(user: widget.user)];
     return Scaffold(
+      extendBody: true,
       body: pages[widget.selectedIndex],
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF172A48),
