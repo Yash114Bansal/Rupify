@@ -1,11 +1,11 @@
 export 'package:flutter/material.dart';
 export 'package:rupify/Pages/Home/Contacts/contacts.dart';
-export 'package:rupify/Pages/Home/Dashboard/home_screen.dart';
+export 'package:rupify/Pages/Home/Home/home_screen.dart';
 export 'package:rupify/Pages/Home/Recieve Money/scan.dart';
 export 'package:rupify/Pages/Home/Send Money/send.dart';
-export 'package:rupify/Pages/Home/Transactions History/Transactions.dart';
+export 'package:rupify/Pages/Home/Transactions History/transactions.dart';
 export 'package:rupify/Pages/Home/Wallet/wallet.dart';
-export 'package:rupify/Pages/Home/dashboard.dart';
+export 'package:rupify/Pages/Home/wrapper.dart';
 export 'package:rupify/Services/all_api.dart';
 export 'package:rupify/Services/balance_statements.dart';
 export 'package:rupify/Services/transaction.dart';

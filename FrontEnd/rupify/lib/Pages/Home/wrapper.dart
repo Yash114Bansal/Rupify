@@ -1,34 +1,30 @@
+import 'package:rupify/Pages/Home/Profile/profile_paeg.dart';
 import 'package:rupify/Src/requirements.dart';
 
 class Dashboard extends StatefulWidget {
 
   final UserModelPrimary user;
-  const Dashboard(
+  Dashboard(
       {super.key, required this.user});
+  int selectedIndex = 0;
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  Map<String, String> dashBoardIcons = {
-    'assets/Icons/Internet.png': 'WIFI',
-    'assets/Icons/Electricity.png': 'Electricity',
-    'assets/Icons/Fast_Tag.png': 'Fast Tag',
-    'assets/Icons/Metro.png': 'Metro',
-    'assets/Icons/Recharge.png': 'Recharge',
-    'assets/Icons/Income_Tax.png': 'Income Tax',
-    'assets/Icons/Gas.png': 'Gas',
-    'assets/Icons/More.png': 'More',
-  };
+
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+
+    List<Widget> pages = [HomeScreen(user: widget.user),Transactions(),WalletScreen(user: widget.user),ProfilePage(user: widget.user)];
     return Scaffold(
-      body: HomeScreen(user: widget.user),
+      body: pages[widget.selectedIndex],
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF172A48),
         onPressed: () async {
@@ -52,7 +48,9 @@ class _DashboardState extends State<Dashboard> {
           children: [
             IconButton(
               onPressed: () {
-                // TODO Handle icon button 1 press
+                setState(() {
+                  widget.selectedIndex = 0;
+                });
               },
               icon: Image.asset(
                 'assets/Icons/home.png',
@@ -62,10 +60,9 @@ class _DashboardState extends State<Dashboard> {
             ),
             IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => transactions()),
-                );
+                setState(() {
+                  widget.selectedIndex = 1;
+                });
               },
               icon: Image.asset(
                 'assets/Icons/transaction.png',
@@ -76,11 +73,9 @@ class _DashboardState extends State<Dashboard> {
             const SizedBox(width: 48),
             IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WalletScreen(user: widget.user)),
-                );
+                setState(() {
+                  widget.selectedIndex = 2;
+                });
               },
               icon: Image.asset(
                 'assets/Icons/news.png',
@@ -90,7 +85,9 @@ class _DashboardState extends State<Dashboard> {
             ),
             IconButton(
               onPressed: () {
-                // TODO Handle icon button 4 press
+                setState(() {
+                  widget.selectedIndex = 3;
+                });
               },
               icon: const Icon(Icons.person, color: Colors.white),
             ),
