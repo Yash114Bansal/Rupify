@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import '../../Services/user_model.dart';
 import '../Home/dashboard.dart';
 import 'package:http/http.dart' as http;
-class login extends StatefulWidget {
-  login({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<login> createState() => _loginState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _loginState extends State<login> {
+class _LoginPageState extends State<LoginPage> {
+  UserModelPrimary user = UserModelPrimary(aadharNumber: '', userName: '', userPic: '', phoneNumber: '', availableBalance: 0, noteData: {}, history: {}, userData: {});
   final TextEditingController _textFieldController = TextEditingController();
 
   String title = "Continue";
@@ -26,6 +28,7 @@ class _loginState extends State<login> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     String data = _textFieldController.text;
+    user.aadharNumber = data;
     bool result = await InternetConnectionChecker().hasConnection;
     if(result){
       final response = await http.post(
@@ -44,12 +47,13 @@ class _loginState extends State<login> {
         Navigator.pop(context);
         return;
       }
-      final user_details = jsonDecode(response.body);
-      print(user_details);
+      final userDetails = jsonDecode(response.body);
+      user.userData = userDetails;
+      print(userDetails);
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Dashboard(aadharNumber: data,userData: user_details,),
+          builder: (context) => Dashboard(user: user),
         ),
       );
       Navigator.pop(context);

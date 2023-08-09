@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:rupify/Services/user_model.dart';
+import 'package:rupify/Src/requirements.dart';
 
 
 class Wrapper extends StatefulWidget {
-  final User user;
+  final UserModelPrimary user;
   Wrapper({super.key,required this.user});
   @override
   State<Wrapper> createState() => _WrapperState();

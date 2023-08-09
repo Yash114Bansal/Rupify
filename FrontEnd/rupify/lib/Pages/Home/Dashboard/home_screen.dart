@@ -1,20 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:rupify/Services/user_model.dart';
-
-import '../../../Services/user_model2.dart';
-import '../Contacts/contacts.dart';
-import '../Recieve Money/scan.dart';
-import '../Send Money/send.dart';
+import 'package:rupify/Src/requirements.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
+  final UserModelPrimary user;
   const HomeScreen({super.key,required this.user});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   Map<String, String> dashBoardIcons = {
     'assets/Icons/Internet.png': 'WIFI',
     'assets/Icons/Electricity.png': 'Electricity',
@@ -25,10 +19,20 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/Icons/Gas.png': 'Gas',
     'assets/Icons/More.png': 'More',
   };
-  List<User1> Contacts = [];
+  List<UserModelSecondary> Contacts = [
+    UserModelSecondary(userName: 'Muskan', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999990'),
+    UserModelSecondary(userName: 'Paras', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999991'),
+    UserModelSecondary(userName: 'Dhruval', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999992'),
+    UserModelSecondary(userName: 'Khushi', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999993'),
+    UserModelSecondary(userName: 'Pushkar', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999994'),
+    UserModelSecondary(userName: 'Shreya', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999995'),
+    UserModelSecondary(userName: 'Nitin', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999996'),
+    UserModelSecondary(userName: 'Ramu', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999997'),
+  ];
   @override
   Widget build(BuildContext context) {
     List<MapEntry<String, String>> entries = dashBoardIcons.entries.toList();
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -46,19 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  // TODO :Handle icon button 1 press
+                  print(widget.user.userData);
                 },
                 iconSize: 40,
                 icon: CircleAvatar(
                   radius: 20,
                   backgroundImage:
-                  NetworkImage(widget.user.userData["Profile Pic"])
+                  NetworkImage('https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp')
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.65),
               IconButton(
                 onPressed: () {
                   // TODO: Handle icon button 2 press
+                  print(widget.user.noteData);
                 },
                 iconSize: 40,
                 icon: Image.asset(
@@ -116,13 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SendScreen(
-                                Note_Data: widget.user.noteData,
-                                Aadhar_Number: widget.user.aadharNumber,
-                                History: widget.user.history,
-                              )),
+                              builder: (context) => SendScreen(user: widget.user)),
                         );
-                        updateEverything();//Todo import this function form somewhere
+                        setState(() {
+                          Functions().updateEverything(widget.user);
+                        });
                       },
                       child: Column(
                         children: [
@@ -148,14 +151,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => QrView(
-                              Note_Data: widget.user.noteData,
-                              Aadhar_Number: widget.user.aadharNumber,
-                              History: widget.user.history,
-                              user_data: widget.user.userData,
-                            )),
+                            builder: (context) => QrView(user: widget.user)),
                       );
-                      updateEverything();
+                      setState(()  {
+                         Functions().updateEverything(widget.user);
+                      });
                     },
                     child: Column(
                       children: [
@@ -177,7 +177,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      _fetchData(widget.user.aadharNumber);//todo import this function from somewhere
+                      setState(()  {
+                         Functions().fetchData(context, widget.user);
+                      });
+                      setState(() {
+                        Functions().updateEverything(widget.user);
+                      });
                     },
                     child: Column(
                       children: [
@@ -220,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
               child: GridView.builder(
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                 ),
@@ -276,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
               child: GridView.builder(
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                 ),
@@ -292,17 +297,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   builder: (context) =>
                                       Contacts1(data: Contacts[index].userName)));
                         },
-                        child: CircleAvatar(
-                          radius: 27,
-                          backgroundColor: (index % 2 == 0)
-                              ? Colors.blue
-                              : Colors.blueAccent,
-                          child: Text(
-                            Contacts[index].userName[0],
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                        child:  ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: FadeInImage(
+                              height: 60,
+                              width: 60,
+                              fadeInDuration:  Duration(milliseconds: 500),
+                              fadeInCurve: Curves.easeInExpo,
+                              fadeOutCurve: Curves.easeOutExpo,
+                              placeholder: AssetImage('assets/Icons/PlaceHolder.jpg'),
+                              image: NetworkImage(Contacts[index].userPic
+                              ),
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Container(child: Image.asset("assets/Icons/PlaceHolder.jpg"));
+                              },
+                              fit: BoxFit.cover),
                         ),
                       ),
                       SizedBox(

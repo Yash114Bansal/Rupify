@@ -1,6 +1,6 @@
-class User1{
+class UserModelSecondary{
   String userName;
   String userPic;
   String phoneNumber;
-  User1({required this.userName, required this.userPic, required this.phoneNumber});
+  UserModelSecondary({required this.userName, required this.userPic, required this.phoneNumber});
 }

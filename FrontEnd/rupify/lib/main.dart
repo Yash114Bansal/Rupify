@@ -17,7 +17,7 @@ void main(){
     debugShowCheckedModeBanner: false,
     initialRoute: '/login',
     routes: {
-      '/login':(context)=>login(),
+      '/login':(context)=>LoginPage(),
     },
   ));
 }

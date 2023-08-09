@@ -1,16 +1,8 @@
-import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-import '../Recieve Money/scan.dart';
-import 'available_notes.dart';
-// import 'package:rupify/services/balance_statements.dart';
-import '../../../Services/balance_statements.dart';
+import 'package:rupify/Src/requirements.dart';
 
 class WalletScreen extends StatefulWidget {
-  final Map<String, int> History;
-  final Map<String, int> Note_Data;
-  final double Amount;
-  final String Aadhar_Number;
-  WalletScreen({super.key, required this.History,required this.Amount,required this.Note_Data,required this.Aadhar_Number});
+  final UserModelPrimary user;
+  WalletScreen({super.key,required this.user,});
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -21,7 +13,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    for (var value in widget.History.values) {
+    for (var value in widget.user.history.values) {
       DateTime now = DateTime.now();
       DateTime date = DateTime(
           now.year, now.month, now.day, now.hour, now.minute, now.second);
@@ -78,7 +70,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${widget.Amount}',
+                    '${widget.user.availableBalance}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -95,7 +87,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    NotesScreen(Note_Data: widget.Note_Data)),
+                                    NotesScreen(Note_Data: widget.user.noteData)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -257,11 +249,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 elevation: 5,
               ),
               onPressed: () {
-                // TODO
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,History: widget.History)),
-                // );
+
               },
               child: const Text(
                 'Make Payment',
