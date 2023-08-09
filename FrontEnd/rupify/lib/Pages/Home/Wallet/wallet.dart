@@ -225,7 +225,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             ),
                           ),
                           const Text(
-                            'Nothig to show here!!',
+                            'Nothing to show here!!',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.black54,
