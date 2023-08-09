@@ -225,7 +225,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             ),
                           ),
                           const Text(
-                            'Nothig to show here!!',
+                            'Nothing to show here!!',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.black54,
@@ -235,29 +235,6 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                 ],
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(30),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                elevation: 5,
-              ),
-              onPressed: () {
-
-              },
-              child: const Text(
-                'Make Payment',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ),
           ),
