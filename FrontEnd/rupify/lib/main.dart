@@ -10,7 +10,7 @@ void main(){
       fontFamily: 'Outfit',
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
-          color: Colors.blue
+          color: Colors.white
         )
       )
     ),

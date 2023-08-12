@@ -129,6 +129,28 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                   ),
+                  if (transactions.isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height*0.1,),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            child: Center(
+                              child: Image.asset('assets/Icons/duck.png'),
+                            ),
+                          ),
+                          const Text(
+                            'Nothing to show here!!',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   Expanded(
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
@@ -193,7 +215,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ),
                                     ],
                                   ),
-                                  const Spacer(),
                                   Text(
                                     '${transactions[transactions.length-1-index].amount}₹',
                                     style: TextStyle(
@@ -212,28 +233,6 @@ class _WalletScreenState extends State<WalletScreen> {
                       },
                     ),
                   ),
-                  if (transactions.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(100, 0, 50, 100),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            child: Center(
-                              child: Image.asset('assets/Icons/duck.png'),
-                            ),
-                          ),
-                          const Text(
-                            'Nothing to show here!!',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                 ],
               ),
             ),

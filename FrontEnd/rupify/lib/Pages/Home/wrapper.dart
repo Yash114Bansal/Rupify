@@ -6,7 +6,7 @@ class Dashboard extends StatefulWidget {
   final UserModelPrimary user;
   Dashboard(
       {super.key, required this.user});
-  int selectedIndex = 0;
+  int selectedIndex = 3;
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -22,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
 
-    List<Widget> pages = [HomeScreen(user: widget.user),Transactions(),WalletScreen(user: widget.user),ProfilePage(user: widget.user)];
+    List<Widget> pages = [HomeScreen(user: widget.user),const Transactions(),WalletScreen(user: widget.user),ProfilePage(user: widget.user)];
     return Scaffold(
       extendBody: true,
       body: pages[widget.selectedIndex],
