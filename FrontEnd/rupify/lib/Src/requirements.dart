@@ -23,3 +23,8 @@ export 'package:qr_code_scanner/qr_code_scanner.dart';
 export 'package:rupify/Src/requirements.dart';
 export 'package:rupify/Services/StaticData/icons.dart';
 export 'package:rupify/Services/StaticData/contacts.dart';
+export 'package:rupify/Pages/Home/Home/Widgets/app_bar.dart';
+export 'package:rupify/Pages/Home/Home/Widgets/available_balance.dart';
+export 'package:rupify/Pages/Home/Home/Widgets/payment_card.dart';
+export 'package:rupify/Pages/Home/Home/Widgets/payment_list.dart';
+export 'package:rupify/Pages/Home/Home/Widgets/people.dart';
