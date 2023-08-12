@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.113,
+            height: MediaQuery.of(context).size.height * 0.17,
             child: Card(
               color: Colors.transparent,
               elevation: 0,
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const Text(
                       'Available Balance',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         color: Colors.white,
                       ),
                     ),
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       '₹ ${widget.user.availableBalance}',
                       style: const TextStyle(
-                        fontSize: 35,
+                        fontSize: 40,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -102,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.005),
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.height * 0.05),
