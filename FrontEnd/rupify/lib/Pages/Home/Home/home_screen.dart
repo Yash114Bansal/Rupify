@@ -9,26 +9,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  Map<String, String> dashBoardIcons = {
-    'assets/Icons/Internet.png': 'WIFI',
-    'assets/Icons/Electricity.png': 'Electricity',
-    'assets/Icons/Fast_Tag.png': 'Fast Tag',
-    'assets/Icons/Metro.png': 'Metro',
-    'assets/Icons/Recharge.png': 'Recharge',
-    'assets/Icons/Income_Tax.png': 'Income Tax',
-    'assets/Icons/Gas.png': 'Gas',
-    'assets/Icons/More.png': 'More',
-  };
-  List<UserModelSecondary> Contacts = [
-    UserModelSecondary(userName: 'Muskan', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999990'),
-    UserModelSecondary(userName: 'Paras', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999991'),
-    UserModelSecondary(userName: 'Dhruval', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999992'),
-    UserModelSecondary(userName: 'Khushi', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999993'),
-    UserModelSecondary(userName: 'Pushkar', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999994'),
-    UserModelSecondary(userName: 'Shreya', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999995'),
-    UserModelSecondary(userName: 'Nitin', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999996'),
-    UserModelSecondary(userName: 'Ramu', userPic: 'https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp', phoneNumber: '9999999997'),
-  ];
   @override
   Widget build(BuildContext context) {
     List<MapEntry<String, String>> entries = dashBoardIcons.entries.toList();
@@ -219,13 +199,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          SizedBox(
+          Container(
             height: MediaQuery.of(context).size.height * 0.2,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: const EdgeInsets.symmetric(horizontal: 35,vertical: 5),
               child: GridView.builder(
-                physics: const ClampingScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                physics:  const NeverScrollableScrollPhysics(),
+                gridDelegate:  const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                 ),
                 itemCount: 8,
@@ -262,15 +242,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Padding(
             padding: EdgeInsets.only(
                 right: MediaQuery.of(context).size.height * 0.27),
-            child: const Text(
+            child:  Text(
               'People',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 20,
+                fontSize: MediaQuery.of(context).size.width*0.049,
                 color: Colors.black,
               ),
             ),
@@ -294,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      Contacts1(data: Contacts[index].userName)));
+                                      Contacts1(data: contacts[index].userName)));
                         },
                         child:  ClipRRect(
                           borderRadius: BorderRadius.circular(28),
@@ -305,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fadeInCurve: Curves.easeInExpo,
                               fadeOutCurve: Curves.easeOutExpo,
                               placeholder: AssetImage('assets/Icons/PlaceHolder.jpg'),
-                              image: NetworkImage(Contacts[index].userPic
+                              image: NetworkImage(contacts[index].userPic
                               ),
                               imageErrorBuilder: (context, error, stackTrace) {
                                 return Container(child: Image.asset("assets/Icons/PlaceHolder.jpg"));
@@ -316,10 +295,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                           height: MediaQuery.of(context).size.height * 0.002),
                       Text(
-                        Contacts[index].userName,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                        contacts[index].userName,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width*0.035,
+                          fontWeight: FontWeight.normal
                         ),
                       ),
                     ],

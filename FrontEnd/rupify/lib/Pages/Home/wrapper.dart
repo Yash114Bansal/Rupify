@@ -6,7 +6,7 @@ class Dashboard extends StatefulWidget {
   final UserModelPrimary user;
   Dashboard(
       {super.key, required this.user});
-  int selectedIndex = 3;
+  int selectedIndex = 0;
 
   @override
   _DashboardState createState() => _DashboardState();

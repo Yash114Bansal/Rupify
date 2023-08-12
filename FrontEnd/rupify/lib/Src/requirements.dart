@@ -21,3 +21,5 @@ export 'package:awesome_dialog/awesome_dialog.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:qr_code_scanner/qr_code_scanner.dart';
 export 'package:rupify/Src/requirements.dart';
+export 'package:rupify/Services/StaticData/icons.dart';
+export 'package:rupify/Services/StaticData/contacts.dart';
