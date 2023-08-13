@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:rupify/Services/user_model.dart';
 
 Widget availableBalance(context,UserModelPrimary user){
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.17,
     child: Card(
-      color: Colors.transparent,
       elevation: 0,
+      color: Colors.transparent,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
