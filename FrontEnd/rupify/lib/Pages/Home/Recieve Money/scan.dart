@@ -1,19 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
+
 import 'dart:developer';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
+import 'package:rupify/Src/requirements.dart';
 
 class Qr extends StatelessWidget {
-  final Map<String, int> Note_Data;
-  final String Aadhar_Number;
-  final Map<String,int> History;
-  final Map<String,dynamic> user_data;
-  Qr({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
+  final UserModelPrimary user;
+  Qr({Key? key,required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +15,7 @@ class Qr extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => QrView(Note_Data: Note_Data,Aadhar_Number: Aadhar_Number,History: History,user_data:user_data ,),
+              builder: (context) => QrView(user: user,),
             ));
           },
           child: const Text('qrView'),
@@ -34,11 +26,8 @@ class Qr extends StatelessWidget {
 }
 
 class QrView extends StatefulWidget {
-  final Map<String, int> Note_Data;
-  final String Aadhar_Number;
-  final Map<String, int> History;
-  final Map<String,dynamic> user_data;
-  const QrView({Key? key,required this.Note_Data,required this.Aadhar_Number, required this.History,required this.user_data}) : super(key: key);
+  final UserModelPrimary user;
+  const QrView({Key? key,required this.user}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QrViewState();
 }
@@ -51,8 +40,6 @@ class _QrViewState extends State<QrView> {
   String Get_Val_api = "https://funny-bull-bathing-suit.cyclic.app/getval";
   String Transfer_api = "https://drab-jade-duckling-cape.cyclic.app/transfer";
   Uint8List bytes = Uint8List(0);
-
-  @override
 
   Future<void> scanImageFromCamera() async {
     final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -78,7 +65,7 @@ class _QrViewState extends State<QrView> {
         //TODO Purpose Check
       }
       for(int purpose in Purpose_of_Each_Note){
-        if(widget.user_data["purpose"].contains(purpose)){
+        if(widget.user.userData["purpose"].contains(purpose)){
           //Pass
         }else{
           Navigator.pop(context);
@@ -101,7 +88,7 @@ class _QrViewState extends State<QrView> {
       final response0 = await http.post(
         Uri.parse(Transfer_api),
         headers: {"Content-Type": "application/json"},
-        body: json.encode({"note_list": Note_Without_Purpose, "shopkeeper_aadhar": widget.Aadhar_Number}),
+        body: json.encode({"note_list": Note_Without_Purpose, "shopkeeper_aadhar": widget.user.aadharNumber}),
       );
       final response11 = await http.post(
         Uri.parse("https://funny-bull-bathing-suit.cyclic.app/get_name_by_note"),
@@ -148,8 +135,8 @@ class _QrViewState extends State<QrView> {
           );
           int amt = int.parse(response_get_value_of_new_note.body);
           note = note+"::0";
-          widget.Note_Data[note] = amt;
-          widget.History[note] = amt;
+          widget.user.noteData[note] = amt;
+          widget.user.history[note] = amt;
           total_money += amt;
         }
         Navigator.pop(context);
