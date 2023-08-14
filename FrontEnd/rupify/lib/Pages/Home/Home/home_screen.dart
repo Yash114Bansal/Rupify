@@ -1,36 +1,42 @@
-
 import 'package:rupify/Src/requirements.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModelPrimary user;
   const HomeScreen({super.key, required this.user});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   Widget build(BuildContext context) {
-    List<MapEntry<String, String>> entries = dashBoardIcons.entries.toList();
-
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/Background/dashboard.png'),
-          fit: BoxFit.cover,
+      color: const Color(0xFF172A48),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: [
+            SizedBox(height: height*0.018),
+            Positioned(
+                top: height*0.015,
+                left: 0,
+                right: 0,
+                child : Column(
+                  children: [
+                    appBar(context),
+                    availableBalance(context, widget.user)
+                  ],
+                )
+            ),
+
+            paymentAndPeople(context, widget.user),
+          ],
         ),
       ),
-      child: Column(children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-        appBar(context),
-        availableBalance(context, widget.user),
-        paymentCard(context, widget.user),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-        paymentList(context, entries),
-        people(context),
-      ]),
     );
   }
 }

@@ -6,12 +6,7 @@ import 'package:http/http.dart' as http;
 import '../user_model.dart';
 
 class Functions{
-  void fetchData(BuildContext context,UserModelPrimary user) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
+  Future<void> fetchData(BuildContext context,UserModelPrimary user) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
       final response = await http.post(
@@ -59,8 +54,6 @@ class Functions{
         });
       }
       updateEverything(user);
-      Navigator.pop(context);
-      await _showSuccessDialog(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -68,7 +61,6 @@ class Functions{
           duration: Duration(seconds: 4),
         ),
       );
-      Navigator.pop(context);
     }
   }
   void updateEverything(UserModelPrimary user)  {
@@ -76,31 +68,6 @@ class Functions{
         .fold(0, (previousValue, element) => previousValue + element);
     user.availableBalance = sum;
   }
-  Future<void> _showSuccessDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Success'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Notes fetched successfully.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   Functions();
 }
