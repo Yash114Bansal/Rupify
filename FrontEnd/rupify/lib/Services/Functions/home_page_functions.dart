@@ -5,7 +5,7 @@ import '../all_api.dart';
 import 'package:http/http.dart' as http;
 import '../user_model.dart';
 
-class Functions{
+class HomePageFunctions{
   Future<void> fetchData(BuildContext context,UserModelPrimary user) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
@@ -69,5 +69,5 @@ class Functions{
     user.availableBalance = sum;
   }
 
-  Functions();
+  HomePageFunctions();
 }

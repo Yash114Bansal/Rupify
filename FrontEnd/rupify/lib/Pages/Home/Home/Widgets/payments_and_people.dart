@@ -7,12 +7,12 @@ Widget paymentAndPeople(context,UserModelPrimary user){
   RefreshController(initialRefresh: false);
 
   void onRefresh() async{
-    await Functions().fetchData(context,user);
+    await HomePageFunctions().fetchData(context,user);
     refreshController.refreshCompleted();
   }
 
   void onLoading() async{
-    await Functions().fetchData(context,user);
+    await HomePageFunctions().fetchData(context,user);
     refreshController.loadComplete();
   }
   double height = MediaQuery.of(context).size.height;

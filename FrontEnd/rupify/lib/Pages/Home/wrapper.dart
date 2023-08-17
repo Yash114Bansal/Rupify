@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
             MaterialPageRoute(
                 builder: (context) => QrView(user: widget.user,)),
           );
-          Functions().updateEverything(widget.user);
+          HomePageFunctions().updateEverything(widget.user);
         },
         child: const Icon(Icons.qr_code_scanner_outlined),
       ),

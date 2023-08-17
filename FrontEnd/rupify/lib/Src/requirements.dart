@@ -12,7 +12,7 @@ export 'package:rupify/Services/transaction.dart';
 export 'package:rupify/Services/user_model.dart';
 export 'package:rupify/Pages/Home/Wallet/available_notes.dart';
 export 'package:rupify/Services/user_model2.dart';
-export 'package:rupify/Services/Functions/all_functions.dart';
+export 'package:rupify/Services/Functions/home_page_functions.dart';
 export 'dart:convert';
 export 'package:flutter/services.dart';
 export 'package:flutter_vibrate/flutter_vibrate.dart';
