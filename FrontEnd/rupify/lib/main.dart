@@ -10,14 +10,14 @@ void main(){
       fontFamily: 'Outfit',
       appBarTheme: AppBarTheme(
         iconTheme: IconThemeData(
-          color: Colors.blue
+          color: Colors.white
         )
       )
     ),
     debugShowCheckedModeBanner: false,
     initialRoute: '/login',
     routes: {
-      '/login':(context)=>login(),
+      '/login':(context)=>LoginPage(),
     },
   ));
 }

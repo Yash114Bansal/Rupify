@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NotesScreen extends StatelessWidget {
   final Map<String, int> Note_Data;
-  NotesScreen({required this.Note_Data}){}
+  const NotesScreen({super.key, required this.Note_Data});
 
 
   @override

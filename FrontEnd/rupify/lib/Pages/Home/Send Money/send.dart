@@ -7,11 +7,11 @@ import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:rupify/Services/user_model.dart';
 class SendScreen extends StatefulWidget {
-  final Map<String, int> Note_Data;
-  final String Aadhar_Number;
-  final Map<String, int> History;
-  SendScreen({required this.Note_Data,required this.Aadhar_Number,required this.History});
+
+  final UserModelPrimary user;
+  SendScreen({super.key, required this.user});
   @override
   _SendScreenState createState() => _SendScreenState();
 }
@@ -26,7 +26,7 @@ class _SendScreenState extends State<SendScreen> {
   @override
   void initState() {
     super.initState();
-    for (var value in widget.Note_Data.values) {
+    for (var value in widget.user.noteData.values) {
       _balance += value;
     }
   }
@@ -41,7 +41,7 @@ class _SendScreenState extends State<SendScreen> {
       // TODO: Send request to the API here
       print('Sending request to the API...');
       final response_pending_notes = await http.post(
-        Uri.parse('$Pending_Note_api?aadhar=${widget.Aadhar_Number}'),
+        Uri.parse('$Pending_Note_api?aadhar=${widget.user.aadharNumber}'),
         headers: {"Content-Type": "application/json"},
       );
       List<String> list = response_pending_notes.body
@@ -62,9 +62,9 @@ class _SendScreenState extends State<SendScreen> {
             body: json.encode({"note": note}),
           );
           int responseData = int.parse(response2.body);
-          widget.History[note] = -1*responseData;
+          widget.user.history[note] = -1*responseData;
           // widget.Note_Data.remove(note+"::0");
-          widget.Note_Data.removeWhere((data, index) {
+          widget.user.noteData.removeWhere((data, index) {
             List<String> parts = data.split("::");
             return parts.length > 1 && parts[0] == note;
           });
@@ -142,7 +142,7 @@ class _SendScreenState extends State<SendScreen> {
       );
     }
     else {
-      List<String>? working_notes = getCurrencyNotes(widget.Note_Data, _amount);
+      List<String>? working_notes = getCurrencyNotes(widget.user.noteData, _amount);
       if (working_notes == null) {
 
         showDialog(
