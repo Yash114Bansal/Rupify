@@ -21,7 +21,7 @@ Widget people(context){
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: GridView.builder(
-            physics: const BouncingScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
             ),
@@ -40,8 +40,8 @@ Widget people(context){
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(28),
                       child: FadeInImage(
-                          height: 60,
-                          width: 60,
+                          height: MediaQuery.of(context).size.height*0.06,
+                          width: MediaQuery.of(context).size.height*0.06,
                           fadeInDuration: Duration(milliseconds: 500),
                           fadeInCurve: Curves.easeInExpo,
                           fadeOutCurve: Curves.easeOutExpo,
@@ -49,9 +49,8 @@ Widget people(context){
                           AssetImage('assets/Icons/PlaceHolder.jpg'),
                           image: NetworkImage(contacts[index].userPic),
                           imageErrorBuilder: (context, error, stackTrace) {
-                            return Container(
-                                child: Image.asset(
-                                    "assets/Icons/PlaceHolder.jpg"));
+                            return Image.asset(
+                                "assets/Icons/PlaceHolder.jpg");
                           },
                           fit: BoxFit.cover),
                     ),
