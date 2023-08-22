@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 
 class ScanPageFunctions{
-  QRViewController controller;
+  MobileScannerController controller = MobileScannerController();
   UserModelPrimary user;
 
   void makePayment(context, String? data) async {
@@ -13,8 +13,7 @@ class ScanPageFunctions{
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-    controller.pauseCamera();
-    if (data != null && data.isNotEmpty) {
+    if (data!.isNotEmpty) {
       List<String> list = data.replaceAll('[', '').replaceAll(']', '').split(',').map((element) => element.trim()).toList();
       List<String> noteWithoutPurpose = [];
       List<int> purposeOfEachNote = [];
@@ -116,27 +115,28 @@ class ScanPageFunctions{
     }
   }
 
-  void onQRViewCreated(controller,context,Barcode result) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      result = scanData;
-      ScanPageFunctions(controller: controller, user: user).makePayment(context, result.code);
-    });
-  }
-
-  void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
-  }
-
-  Future<void> scanImageFromCamera() async {
-    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-        print("File not Picked yet");
+  void scanImageFromGallery(context) async{
+    final ImagePicker picker = ImagePicker();
+    // Pick an image
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (image != null) {
+      if (await controller.analyzeImage(image.path)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Barcode found!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No barcode found!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
