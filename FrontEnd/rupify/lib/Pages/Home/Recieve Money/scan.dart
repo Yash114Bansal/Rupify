@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:rupify/Src/requirements.dart';
 
 class Qr extends StatelessWidget {
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   Qr({Key? key,required this.user}) : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class Qr extends StatelessWidget {
 }
 
 class QrView extends StatefulWidget {
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   const QrView({Key? key,required this.user}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QrViewState();

@@ -10,7 +10,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:rupify/Services/user_model.dart';
 class SendScreen extends StatefulWidget {
 
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   SendScreen({super.key, required this.user});
   @override
   _SendScreenState createState() => _SendScreenState();

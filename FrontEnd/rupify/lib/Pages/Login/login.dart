@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import '../../Services/user_model.dart';
+import 'package:rupify/Pages/Login/requests_and_verification.dart';
+import 'package:rupify/Services/Models/user_model.dart';
+import 'package:rupify/Services/user_model.dart';
 import '../Home/wrapper.dart';
-import 'package:http/http.dart' as http;
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,60 +14,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  UserModelPrimary user = UserModelPrimary(aadharNumber: '', userName: '', userPic: '', phoneNumber: '', availableBalance: 0, noteData: {}, history: {}, userData: {});
-  final TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _aadharTextController = TextEditingController();
+  final TextEditingController _oppTextController = TextEditingController();
 
-  String title = "Continue";
-  String getDetails = "https://funny-bull-bathing-suit.cyclic.app/get_detailes";
-
-  void _navigateToDestinationPage(BuildContext context) async{
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-    String data = _textFieldController.text;
-    user.aadharNumber = data;
-    bool result = await InternetConnectionChecker().hasConnection;
-    if(result){
-      final response = await http.post(
-        Uri.parse(getDetails),
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({"aadhar": data}),
-      );
-      if(response.statusCode == 404){
-        print("Invalid Aadhar");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid Aadhar'),
-            duration: Duration(seconds: 4),
-          ),
-        );
-        Navigator.pop(context);
-        return;
-      }
-      final userDetails = jsonDecode(response.body);
-      user.userData = userDetails;
-      print(userDetails);
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Dashboard(user: user),
-        ),
-      );
-      Navigator.pop(context);
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Not connected to the internet.'),
-          duration: Duration(seconds: 4),
-        ),
-      );
-      Navigator.pop(context);
-      return;
-    }
-
-  }
+  bool otpSent = true;
 
   String? validateAadhar(String? value) {
     if (value!.isEmpty) {
@@ -78,6 +27,19 @@ class _LoginPageState extends State<LoginPage> {
       return 'Aadhar Number should be 12 digits long';
     }
     return null;
+  }
+  UserModelPrimary_old temp = UserModelPrimary_old(aadharNumber: 'aadharNumber', userName: 'userName', userPic: 'userPic', phoneNumber: 'phoneNumber', availableBalance: 0, noteData: {}, history: {}, userData: {});
+  void goToMainPage(UserModelPrimary user,String token){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Dashboard(user: temp, myUser: user, token: token,)));
+  }
+
+  validate()async{
+    Map<dynamic,dynamic> status = await UserAuthentication(aadharNumber: _aadharTextController.text).verifyOTP(_oppTextController.text);
+    Map<dynamic,dynamic> userDetails =await UserAuthentication(aadharNumber: _aadharTextController.text).loginAuthentication(status['access_token']);
+    await UserAuthentication(aadharNumber: _aadharTextController.text).saveToken(status['access_token']);
+    UserModelPrimary user = UserModelPrimary.fromMap(userDetails);
+    UserAuthentication(aadharNumber: _aadharTextController.text).saveToken(status['access_token']);
+    goToMainPage(user,status['access_token']);
   }
 
   @override
@@ -135,11 +97,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: TextFormField(
                         onTap: () {
-                          setState(() {
-                            title = "Continue";
-                          });
+
                         },
-                        controller: _textFieldController,
+                        controller: _aadharTextController,
                         keyboardType: TextInputType.number,
                         maxLength: 12,
                         inputFormatters: [
@@ -171,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: TextField(
                         keyboardType: TextInputType.number,
+                        controller: _oppTextController,
                         maxLength: 6,
                         decoration: InputDecoration(
                           hintText: 'Enter OTP',
@@ -187,25 +148,46 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 60,),
-
+                    SizedBox(
+                      width: 250,
+                      height: 51,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                            if (_aadharTextController.text.length == 12) {
+                                await UserAuthentication(aadharNumber: _aadharTextController.text).sendOTP();
+                            } else {
+                              Vibrate.feedback(FeedbackType.error);
+                              setState(() {
+                                _aadharTextController.clear();
+                              });
+                            }
+                        },
+                        child: Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 19,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(63),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10,),
                     SizedBox(
                       width: 250,
                       height: 51,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_textFieldController.text.length == 12) {
-
-                            _navigateToDestinationPage(context);
-                          } else {
-                            Vibrate.feedback(FeedbackType.error);
-                            setState(() {
-
-                              _textFieldController.clear();
-                            });
-                          }
+                          validate();
                         },
                         child: Text(
-                          '$title',
+                          'Verify OTP',
                           style: TextStyle(
                             fontSize: 19,
                           ),

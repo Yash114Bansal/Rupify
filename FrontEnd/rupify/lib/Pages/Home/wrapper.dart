@@ -1,11 +1,15 @@
 import 'package:rupify/Pages/Home/Profile/profile_paeg.dart';
 import 'package:rupify/Src/requirements.dart';
 
+import '../../Services/Models/user_model.dart';
+
 class Dashboard extends StatefulWidget {
 
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
+  final UserModelPrimary myUser;
+  final String token;
   Dashboard(
-      {super.key, required this.user});
+      {super.key, required this.user, required this.myUser, required this.token});
   int selectedIndex = 0;
 
   @override

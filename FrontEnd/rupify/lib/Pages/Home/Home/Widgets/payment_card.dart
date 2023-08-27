@@ -1,6 +1,6 @@
 import 'package:rupify/Src/requirements.dart';
 
-Widget paymentCard(context,UserModelPrimary user){
+Widget paymentCard(context,UserModelPrimary_old user){
   return Padding(
     padding: EdgeInsets.symmetric(
         horizontal: MediaQuery.of(context).size.height * 0.05),

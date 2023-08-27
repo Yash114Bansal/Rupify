@@ -2,7 +2,7 @@ import 'package:rupify/Src/requirements.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
-Widget paymentAndPeople(context,UserModelPrimary user){
+Widget paymentAndPeople(context,UserModelPrimary_old user){
   RefreshController refreshController =
   RefreshController(initialRefresh: false);
 

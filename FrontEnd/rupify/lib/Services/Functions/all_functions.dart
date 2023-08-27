@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../user_model.dart';
 
 class Functions{
-  Future<void> fetchData(BuildContext context,UserModelPrimary user) async {
+  Future<void> fetchData(BuildContext context,UserModelPrimary_old user) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
       final response = await http.post(
@@ -63,7 +63,7 @@ class Functions{
       );
     }
   }
-  void updateEverything(UserModelPrimary user)  {
+  void updateEverything(UserModelPrimary_old user)  {
     int sum = user.noteData.values
         .fold(0, (previousValue, element) => previousValue + element);
     user.availableBalance = sum;
