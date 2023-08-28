@@ -153,6 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 51,
                       child: ElevatedButton(
                         onPressed: () async {
+                          FocusScope.of(context).unfocus();
                             if (_aadharTextController.text.length == 12) {
                                 await UserAuthentication(aadharNumber: _aadharTextController.text).sendOTP();
                             } else {
