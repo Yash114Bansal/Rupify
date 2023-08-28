@@ -1,7 +1,7 @@
 import 'package:rupify/Src/requirements.dart';
 
 class HomeScreen extends StatefulWidget {
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   const HomeScreen({super.key, required this.user});
 
   @override

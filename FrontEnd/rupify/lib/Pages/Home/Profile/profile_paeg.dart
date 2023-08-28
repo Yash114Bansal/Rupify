@@ -1,7 +1,9 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rupify/Pages/Login/login.dart';
 import 'package:rupify/Src/requirements.dart';
 
 class ProfilePage extends StatefulWidget {
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   const ProfilePage({super.key, required this.user});
 
   @override
@@ -9,6 +11,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  FlutterSecureStorage storage = const FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +105,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     buildElevatedButton(
                       context,
                       'Personal Details',
-                      () {
-                        // TODO: Add function for Personal Details
+                      () async {
+                        await storage.delete(key: 'access_token');
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                       },
                     ),
                     SizedBox(

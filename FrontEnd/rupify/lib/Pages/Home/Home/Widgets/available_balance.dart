@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rupify/Services/user_model.dart';
 
-Widget availableBalance(context,UserModelPrimary user){
+Widget availableBalance(context,UserModelPrimary_old user){
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.17,
     child: Card(

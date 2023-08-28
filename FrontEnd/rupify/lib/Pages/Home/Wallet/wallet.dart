@@ -1,7 +1,7 @@
 import 'package:rupify/Src/requirements.dart';
 
 class WalletScreen extends StatefulWidget {
-  final UserModelPrimary user;
+  final UserModelPrimary_old user;
   WalletScreen({super.key,required this.user,});
   @override
   _WalletScreenState createState() => _WalletScreenState();
