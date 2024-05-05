@@ -1,4 +1,4 @@
-# Rupify: Redefining the way you pay
+# Rupify: Redefining The Way You Pay
 
 ![Cover](docs/Cover.png)
 
@@ -38,10 +38,15 @@ Rupify utilizes the Django framework to handle transactions and user wallet mana
 ## Rupify Workflow Overview
 
 ![flow1](docs/flow1.png)
+
 ![flow2](docs/flow2.png)
+
 ![flow3](docs/flow3.png)
+
 ![flow4](docs/flow4.png)
+
 ![flow5](docs/flow5.png)
+
 ![flow6](docs/flow6.png)
 
 ## Getting Started
@@ -53,6 +58,9 @@ To get started with Rupify, follow these steps:
 3. **Configuration**: Configure the backend infrastructure according to your requirements, including database settings and environment variables.
 4. **Run the Application**: Start the Rupify backend server and verify that everything is running smoothly.
 
+**Note:** We have migrated the backend to Django for improved performance and scalability. The new backend repository can be found [here](https://github.com/Yash114Bansal/Rupify-Backend).
+
+
 ## Contributing
 
 We welcome contributions from the community to improve Rupify. To contribute, please follow these steps:
@@ -63,6 +71,9 @@ We welcome contributions from the community to improve Rupify. To contribute, pl
 4. Commit your changes (`git commit -am 'Add new feature'`).
 5. Push to the branch (`git push origin feature/improvement`).
 6. Create a new Pull Request.
+
+
+
 
 ## License
 
