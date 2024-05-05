@@ -1,16 +1,8 @@
-import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-import '../Recieve Money/scan.dart';
-import 'available_notes.dart';
-// import 'package:rupify/services/balance_statements.dart';
-import '../../../Services/balance_statements.dart';
+import 'package:rupify/Src/requirements.dart';
 
 class WalletScreen extends StatefulWidget {
-  final Map<String, int> History;
-  final Map<String, int> Note_Data;
-  final double Amount;
-  final String Aadhar_Number;
-  WalletScreen({super.key, required this.History,required this.Amount,required this.Note_Data,required this.Aadhar_Number});
+  final UserModelPrimary user;
+  WalletScreen({super.key,required this.user,});
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -21,7 +13,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    for (var value in widget.History.values) {
+    for (var value in widget.user.history.values) {
       DateTime now = DateTime.now();
       DateTime date = DateTime(
           now.year, now.month, now.day, now.hour, now.minute, now.second);
@@ -78,7 +70,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${widget.Amount}',
+                    '${widget.user.availableBalance}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -95,7 +87,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    NotesScreen(Note_Data: widget.Note_Data)),
+                                    NotesScreen(Note_Data: widget.user.noteData)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
@@ -137,6 +129,28 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                   ),
+                  if (transactions.isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height*0.1,),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            child: Center(
+                              child: Image.asset('assets/Icons/duck.png'),
+                            ),
+                          ),
+                          const Text(
+                            'Nothing to show here!!',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   Expanded(
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
@@ -201,7 +215,6 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ),
                                     ],
                                   ),
-                                  const Spacer(),
                                   Text(
                                     '${transactions[transactions.length-1-index].amount}₹',
                                     style: TextStyle(
@@ -220,56 +233,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       },
                     ),
                   ),
-                  if (transactions.isEmpty)
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(100, 0, 50, 100),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 100,
-                            child: Center(
-                              child: Image.asset('assets/Icons/duck.png'),
-                            ),
-                          ),
-                          const Text(
-                            'Nothig to show here!!',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                 ],
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(30),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                elevation: 5,
-              ),
-              onPressed: () {
-                // TODO
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => QrView(Note_Data: widget.Note_Data, Aadhar_Number: widget.Aadhar_Number,History: widget.History)),
-                // );
-              },
-              child: const Text(
-                'Make Payment',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ),
           ),
