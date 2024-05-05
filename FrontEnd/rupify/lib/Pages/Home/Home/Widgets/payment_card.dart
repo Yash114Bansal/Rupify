@@ -23,7 +23,7 @@ Widget paymentCard(context,UserModelPrimary user){
                     MaterialPageRoute(
                         builder: (context) => SendScreen(user: user)),
                   );
-                    Functions().updateEverything(user);
+                    HomePageFunctions().updateEverything(user);
                 },
                 child: Column(
                   children: [
@@ -50,7 +50,7 @@ Widget paymentCard(context,UserModelPrimary user){
                     MaterialPageRoute(
                         builder: (context) => QrView(user: user)),
                   );
-                    Functions().updateEverything(user);
+                    HomePageFunctions().updateEverything(user);
                 },
                 child: Column(
                   children: [
@@ -72,8 +72,8 @@ Widget paymentCard(context,UserModelPrimary user){
               ),
               InkWell(
                 onTap: () {
-                    Functions().fetchData(context, user);
-                    Functions().updateEverything(user);
+                    HomePageFunctions().fetchData(context, user);
+                    HomePageFunctions().updateEverything(user);
                 },
                 child: Column(
                   children: [
