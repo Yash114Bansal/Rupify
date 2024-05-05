@@ -35,6 +35,15 @@ Rupify utilizes the Django framework to handle transactions and user wallet mana
 ![Screen1](docs/Screens1.png)
 ![Screen2](docs/Screens2.png)
 
+## Rupify Workflow Overview
+
+![flow1](docs/flow1.png)
+![flow2](docs/flow2.png)
+![flow3](docs/flow3.png)
+![flow4](docs/flow4.png)
+![flow5](docs/flow5.png)
+![flow6](docs/flow6.png)
+
 ## Getting Started
 
 To get started with Rupify, follow these steps:
@@ -61,5 +70,10 @@ Rupify is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-For inquiries or assistance, please contact yash114bansal@gmail.com .
+For inquiries or assistance, please contact:
+
+- **Yash Bansal** - [GitHub Profile](https://github.com/yash114bansal)
+- **Paras Upadhayay** - [GitHub Profile](https://github.com/Pudv95)
+- **Dhruval Gupta** - [GitHub Profile](https://github.com/Dig092)
+- **Lakshya Goel** - [GitHub Profile](https://github.com/lakshya1goel)
 
