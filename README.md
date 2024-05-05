@@ -1,6 +1,6 @@
 # Rupify: Redefining the way you pay
 
-![Cover](docs/cover.png)
+![Cover](docs/Cover.png)
 
 Rupify is an innovative fintech solution aimed at redefining digital finance by extending the capabilities of Erupee to enable seamless offline payments with partial server integration. By leveraging the power of Erupee and integrating it seamlessly with offline payment methods, Rupify aims to revolutionize the digital finance landscape, ensuring accessibility and security for users across diverse environments and connectivity scenarios.
 
@@ -61,5 +61,5 @@ Rupify is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-For inquiries or assistance, please contact [project team email].
+For inquiries or assistance, please contact yash114bansal@gmail.com .
 
